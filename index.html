@@ -1,0 +1,3806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Maldives Guest House Hub - Complete Booking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0066cc, #00a8cc, #00cc99);
+            min-height: 100vh;
+        }
+
+        /* Login Container */
+        .login-container {
+            max-width: 450px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #0066cc, #00a8cc);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .login-header i {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .login-form {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #00a8cc;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,168,204,0.1);
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .role-btn.active {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
+        .login-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #0066cc, #00a8cc);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,102,204,0.3);
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .switch-form a {
+            color: #00a8cc;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            display: none;
+            min-height: 100vh;
+            background: #f5f5f5;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            background: linear-gradient(135deg, #0066cc, #00a8cc);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, #0066cc, #00a8cc);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .sidebar-header i {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-header h3 {
+            font-size: 18px;
+        }
+
+        .sidebar-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: #f5f5f5;
+        }
+
+        .menu-item.active {
+            background: #e6f7ff;
+            border-left-color: #00a8cc;
+            color: #0066cc;
+        }
+
+        .menu-item i {
+            font-size: 20px;
+            width: 25px;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 70px;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #0066cc;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .search-input {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .search-input i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .search-input input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .filter-btn.active {
+            background: #0066cc;
+            color: white;
+        }
+
+        /* Guest House Grid */
+        .guesthouse-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .guesthouse-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .guesthouse-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,102,204,0.15);
+        }
+
+        .card-image {
+            height: 200px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: none;
+            font-size: 20px;
+            color: #ff6b6b;
+            z-index: 10;
+        }
+
+        .favorite-btn.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .card-rating {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            color: gold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .card-location {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-facilities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .facility-tag {
+            background: #e6f7ff;
+            color: #0066cc;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .card-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0066cc;
+        }
+
+        .price small {
+            font-size: 12px;
+            color: #999;
+            font-weight: normal;
+        }
+
+        .availability-badge {
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .availability-badge.available {
+            background: #4caf50;
+            color: white;
+        }
+
+        .availability-badge.unavailable {
+            background: #f44336;
+            color: white;
+        }
+
+        /* Room Cards Grid */
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .room-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .room-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+        }
+
+        .room-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .room-image-gallery {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: white;
+            font-size: 12px;
+        }
+
+        .room-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 5;
+        }
+
+        .room-status.available {
+            background: #4caf50;
+            color: white;
+        }
+
+        .room-status.unavailable {
+            background: #f44336;
+            color: white;
+        }
+
+        .room-info {
+            padding: 12px;
+        }
+
+        .room-type {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .room-capacity {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .room-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 8px 0;
+        }
+
+        .amenity-badge {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .room-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0066cc;
+            margin: 8px 0;
+        }
+
+        .room-selector {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .room-selector input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Booking Summary */
+        .booking-summary {
+            background: #f0f8ff;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #d0e7ff;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-total {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0066cc;
+        }
+
+        /* Guest Counter */
+        .guest-counter {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .counter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .counter-row:last-child {
+            border-bottom: none;
+        }
+
+        .counter-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .counter-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #0066cc;
+            background: white;
+            color: #0066cc;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .counter-btn:disabled {
+            border-color: #ccc;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .counter-value {
+            font-size: 18px;
+            font-weight: 600;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        /* Room Selection Area */
+        .room-selection-area {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .room-selection-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+
+        .selected-room-item {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .selected-room-info h4 {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .selected-room-info p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .remove-room {
+            color: #f44336;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0066cc;
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            background: #f8f9fa;
+            color: #0066cc;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status-approved {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-rejected {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .approve-btn {
+            background: #4caf50;
+            color: white;
+        }
+
+        .reject-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #00a8cc;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .view-btn {
+            background: #0066cc;
+            color: white;
+        }
+
+        /* Image Upload */
+        .image-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .image-upload-area:hover {
+            border-color: #00a8cc;
+            background: #f0f8ff;
+        }
+
+        .image-preview {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 24px;
+            height: 24px;
+            background: #f44336;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Date Range */
+        .date-range-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .date-range-item .remove {
+            color: #f44336;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .add-date-btn {
+            background: #00a8cc;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 90;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #999;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .nav-item.active {
+            color: #0066cc;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            padding: 15px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        .modal-header h3 {
+            color: #0066cc;
+            font-size: 20px;
+        }
+
+        .bank-details {
+            background: linear-gradient(135deg, #0066cc, #00a8cc);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .bank-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .bank-row:last-child {
+            border-bottom: none;
+        }
+
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .payment-upload {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin: 15px 0;
+        }
+
+        .payment-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding-top: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-btn.cancel {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .modal-btn.confirm {
+            background: #0066cc;
+            color: white;
+        }
+
+        .modal-btn.confirm:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            left: 20px;
+            background: #0066cc;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            max-width: 90%;
+        }
+
+        .success-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .success-message i {
+            font-size: 60px;
+            color: #4caf50;
+            margin-bottom: 15px;
+        }
+
+        .success-message h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 15px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        /* Mobile Optimizations */
+        @media (min-width: 768px) {
+            .guesthouse-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .rooms-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .notification {
+                left: auto;
+                right: 20px;
+                min-width: 300px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .guesthouse-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .rooms-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-header">
+            <i class="fas fa-hotel"></i>
+            <h1>Maldives Guest House Hub</h1>
+            <p>Your Paradise Stay Awaits</p>
+        </div>
+        
+        <div class="login-form">
+            <!-- Login Form -->
+            <div id="loginForm">
+                <div class="role-buttons">
+                    <button class="role-btn active" data-role="guest">Guest</button>
+                    <button class="role-btn" data-role="owner">Owner</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
+                
+                <button class="login-submit" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                
+                <div class="switch-form">
+                    Don't have an account? <a id="showRegister">Register</a>
+                </div>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" style="display: none;">
+                <div class="role-buttons">
+                    <button class="role-btn active" data-role="guest">Guest</button>
+                    <button class="role-btn" data-role="owner">Owner</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="regPhone" placeholder="Enter your phone">
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" placeholder="Create password">
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" placeholder="Confirm password">
+                </div>
+                
+                <!-- Owner Fields -->
+                <div id="ownerFields" style="display: none;">
+                    <div class="form-group">
+                        <label>Guest House Name</label>
+                        <input type="text" id="regGuestHouseName" placeholder="Enter guest house name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Island</label>
+                        <select id="regIsland">
+                            <option value="">Select Island</option>
+                            <option value="Male">Male'</option>
+                            <option value="Hulhumale">Hulhumale'</option>
+                            <option value="Maafushi">Maafushi</option>
+                            <option value="Thulusdhoo">Thulusdhoo</option>
+                            <option value="Ukulhas">Ukulhas</option>
+                            <option value="Rasdhoo">Rasdhoo</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="login-submit" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+                
+                <div class="switch-form">
+                    Already have an account? <a id="showLogin">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard-container" id="dashboardPage">
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+            <button class="menu-btn" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">Maldives GH Hub</div>
+            <div class="user-avatar" id="userAvatar">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-hotel"></i>
+                <h3 id="sidebarUserName">User Name</h3>
+                <p id="sidebarUserRole">Role</p>
+            </div>
+            
+            <div class="sidebar-menu" id="sidebarMenu">
+                <!-- Menu will be populated based on role -->
+            </div>
+            
+            <div class="sidebar-footer">
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+        
+        <div class="overlay" id="overlay"></div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Guest Sections -->
+            <div class="section active" id="guestHome">
+                <h2 class="section-title">
+                    <i class="fas fa-search"></i>
+                    Find Your Stay
+                </h2>
+                
+                <div class="search-bar">
+                    <div class="search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search by name or island...">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="Male">Male'</button>
+                        <button class="filter-btn" data-filter="Hulhumale">Hulhumale'</button>
+                        <button class="filter-btn" data-filter="Maafushi">Maafushi</button>
+                        <button class="filter-btn" data-filter="favorites">⭐ Favorites</button>
+                    </div>
+                </div>
+                
+                <div id="guestHousesList" class="guesthouse-grid">
+                    <!-- Guest houses will be loaded here -->
+                </div>
+            </div>
+
+            <div class="section" id="guestFavorites">
+                <h2 class="section-title">
+                    <i class="fas fa-heart" style="color: #ff6b6b;"></i>
+                    My Favorites
+                </h2>
+                <div id="favoritesList" class="guesthouse-grid">
+                    <!-- Favorites will be loaded here -->
+                </div>
+            </div>
+
+            <div class="section" id="guestBookings">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar-check"></i>
+                    My Bookings
+                </h2>
+                <div id="guestBookingsList" class="guesthouse-grid">
+                    <!-- Bookings will be loaded here -->
+                </div>
+            </div>
+
+            <div class="section" id="guestProfile">
+                <h2 class="section-title">
+                    <i class="fas fa-user"></i>
+                    My Profile
+                </h2>
+                
+                <div style="background: white; border-radius: 15px; padding: 20px;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="profileName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="profileEmail" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="profilePhone" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Owner Sections -->
+            <div class="section" id="ownerDashboard">
+                <h2 class="section-title">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Bookings</h3>
+                        <div class="stat-number" id="totalBookings">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending</h3>
+                        <div class="stat-number" id="pendingBookings">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Rooms</h3>
+                        <div class="stat-number" id="totalRooms">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Revenue</h3>
+                        <div class="stat-number" id="monthlyRevenue">0</div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
+                    <button class="login-submit" onclick="showSection('ownerRooms')">
+                        <i class="fas fa-bed"></i> Manage Rooms
+                    </button>
+                    <button class="login-submit" onclick="showSection('ownerBookings')">
+                        <i class="fas fa-calendar-check"></i> View Bookings
+                    </button>
+                </div>
+            </div>
+
+            <div class="section" id="ownerRooms">
+                <h2 class="section-title">
+                    <i class="fas fa-bed"></i>
+                    Room Management
+                    <button class="action-btn view-btn" onclick="openRoomModal()" style="margin-left: auto;">
+                        <i class="fas fa-plus"></i> Add Room
+                    </button>
+                </h2>
+                
+                <div id="ownerRoomsList" class="rooms-grid">
+                    <!-- Rooms will be loaded here -->
+                </div>
+            </div>
+
+            <div class="section" id="ownerBookings">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar-check"></i>
+                    Booking Management
+                </h2>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>Guest</th>
+                                <th>Rooms</th>
+                                <th>Dates</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ownerBookingsTable">
+                            <!-- Bookings will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="ownerGuests">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    Guest Management
+                </h2>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Guest Name</th>
+                                <th>Contact</th>
+                                <th>Total Bookings</th>
+                                <th>Last Booking</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guestsTable">
+                            <!-- Guests will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section" id="ownerSettings">
+                <h2 class="section-title">
+                    <i class="fas fa-cog"></i>
+                    Guest House Settings
+                </h2>
+                
+                <div style="background: white; border-radius: 15px; padding: 20px;">
+                    <button class="login-submit" onclick="openGHSettings()" style="margin-bottom: 20px;">
+                        <i class="fas fa-edit"></i> Edit Guest House Details
+                    </button>
+                    
+                    <div id="guestHouseInfo">
+                        <!-- Guest house info will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav" id="bottomNav">
+            <!-- Will be populated based on role -->
+        </div>
+    </div>
+
+    <!-- Room Modal -->
+    <div class="modal-overlay" id="roomModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="roomModalTitle">Add New Room</h3>
+            </div>
+            
+            <div class="form-group">
+                <label>Room Type</label>
+                <select id="roomType">
+                    <option value="Standard">Standard</option>
+                    <option value="Deluxe">Deluxe</option>
+                    <option value="Suite">Suite</option>
+                    <option value="Family">Family Room</option>
+                    <option value="Ocean View">Ocean View</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Room Number/Name</label>
+                <input type="text" id="roomNumber" placeholder="e.g., 101, Ocean Breeze">
+            </div>
+            
+            <div class="form-group">
+                <label>Capacity (persons)</label>
+                <input type="number" id="roomCapacity" min="1" value="2">
+            </div>
+            
+            <div class="form-group">
+                <label>Price per Night (MVR)</label>
+                <input type="number" id="roomPrice" min="0" step="100">
+            </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="roomDescription" rows="2" placeholder="Room description..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Amenities</label>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                    <label><input type="checkbox" value="AC"> Air Conditioning</label>
+                    <label><input type="checkbox" value="TV"> TV</label>
+                    <label><input type="checkbox" value="WiFi"> WiFi</label>
+                    <label><input type="checkbox" value="Fridge"> Mini Fridge</label>
+                    <label><input type="checkbox" value="Safe"> Safe</label>
+                    <label><input type="checkbox" value="Balcony"> Balcony</label>
+                    <label><input type="checkbox" value="Ocean View"> Ocean View</label>
+                    <label><input type="checkbox" value="Breakfast"> Breakfast</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Room Images (Multiple)</label>
+                <div class="image-upload-area" id="roomImageUpload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click or drag images to upload</p>
+                    <input type="file" id="roomImages" multiple accept="image/*" style="display: none;">
+                </div>
+                <div class="image-preview" id="roomImagePreview"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>Set Unavailable Dates</label>
+                <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+                    <input type="date" id="unavailableFrom" style="flex: 1;" min="">
+                    <input type="date" id="unavailableTo" style="flex: 1;" min="">
+                    <button class="action-btn view-btn" onclick="addUnavailableRange()">Add</button>
+                </div>
+                <div id="unavailableDatesList"></div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeRoomModal()">Cancel</button>
+                <button class="modal-btn confirm" id="saveRoomBtn">Save Room</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guest House Settings Modal -->
+    <div class="modal-overlay" id="ghSettingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Guest House Details</h3>
+            </div>
+            
+            <div class="form-group">
+                <label>Guest House Name</label>
+                <input type="text" id="editGHName">
+            </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="editGHDescription" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Island</label>
+                <select id="editGHIsland">
+                    <option value="Male">Male'</option>
+                    <option value="Hulhumale">Hulhumale'</option>
+                    <option value="Maafushi">Maafushi</option>
+                    <option value="Thulusdhoo">Thulusdhoo</option>
+                    <option value="Ukulhas">Ukulhas</option>
+                    <option value="Rasdhoo">Rasdhoo</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Address</label>
+                <input type="text" id="editGHAddress">
+            </div>
+            
+            <div class="form-group">
+                <label>Contact Phone</label>
+                <input type="tel" id="editGHContact">
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="editGHEmail">
+            </div>
+            
+            <h4 style="margin: 15px 0 10px; color: #0066cc;">Bank Details</h4>
+            
+            <div class="form-group">
+                <label>Bank Name</label>
+                <input type="text" id="editGHBankName" placeholder="e.g., Bank of Maldives">
+            </div>
+            
+            <div class="form-group">
+                <label>Account Holder Name</label>
+                <input type="text" id="editGHAccountHolder" placeholder="Name on account">
+            </div>
+            
+            <div class="form-group">
+                <label>Account Number</label>
+                <input type="text" id="editGHAccountNumber" placeholder="Account number">
+            </div>
+            
+            <div class="form-group">
+                <label>Bank Branch</label>
+                <input type="text" id="editGHBranch" placeholder="Branch name">
+            </div>
+            
+            <h4 style="margin: 15px 0 10px; color: #0066cc;">Facilities</h4>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 15px;">
+                <label><input type="checkbox" value="WiFi"> WiFi</label>
+                <label><input type="checkbox" value="Restaurant"> Restaurant</label>
+                <label><input type="checkbox" value="Parking"> Parking</label>
+                <label><input type="checkbox" value="Pool"> Swimming Pool</label>
+                <label><input type="checkbox" value="Spa"> Spa</label>
+                <label><input type="checkbox" value="Shuttle"> Airport Shuttle</label>
+                <label><input type="checkbox" value="24/7 Reception"> 24/7 Reception</label>
+                <label><input type="checkbox" value="Laundry"> Laundry</label>
+            </div>
+            
+            <div class="form-group">
+                <label>Guest House Images</label>
+                <div class="image-upload-area" id="ghImageUpload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click or drag images to upload</p>
+                    <input type="file" id="ghImages" multiple accept="image/*" style="display: none;">
+                </div>
+                <div class="image-preview" id="ghImagePreview"></div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeGHSettings()">Cancel</button>
+                <button class="modal-btn confirm" id="saveGHSettings">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Complete Your Booking</h3>
+                <p id="bookingGHName" style="color: #0066cc; font-weight: 600;"></p>
+            </div>
+            
+            <div class="guest-counter">
+                <div class="counter-row">
+                    <span>Adults (12+ years)</span>
+                    <div class="counter-controls">
+                        <button class="counter-btn" onclick="updateGuestCount('adults', -1)">-</button>
+                        <span class="counter-value" id="adultsCount">2</span>
+                        <button class="counter-btn" onclick="updateGuestCount('adults', 1)">+</button>
+                    </div>
+                </div>
+                <div class="counter-row">
+                    <span>Children (2-11 years)</span>
+                    <div class="counter-controls">
+                        <button class="counter-btn" onclick="updateGuestCount('children', -1)">-</button>
+                        <span class="counter-value" id="childrenCount">0</span>
+                        <button class="counter-btn" onclick="updateGuestCount('children', 1)">+</button>
+                    </div>
+                </div>
+                <div class="counter-row">
+                    <span>Infants (under 2 years)</span>
+                    <div class="counter-controls">
+                        <button class="counter-btn" onclick="updateGuestCount('infants', -1)">-</button>
+                        <span class="counter-value" id="infantsCount">0</span>
+                        <button class="counter-btn" onclick="updateGuestCount('infants', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Check-in Date</label>
+                <input type="date" id="bookingCheckIn" class="booking-date" onchange="updateBookingSummary()">
+            </div>
+            
+            <div class="form-group">
+                <label>Check-out Date</label>
+                <input type="date" id="bookingCheckOut" class="booking-date" onchange="updateBookingSummary()">
+            </div>
+            
+            <div class="room-selection-area">
+                <div class="room-selection-title">
+                    <i class="fas fa-bed"></i> Select Rooms (Maximum 3 rooms)
+                </div>
+                <div id="availableRoomsList" class="rooms-grid" style="max-height: 300px; overflow-y: auto;">
+                    <!-- Available rooms will be loaded here -->
+                </div>
+            </div>
+            
+            <div id="selectedRoomsContainer" style="margin-bottom: 15px;">
+                <!-- Selected rooms will be shown here -->
+            </div>
+            
+            <div class="booking-summary" id="bookingSummary">
+                <h4 style="margin-bottom: 10px;">Booking Summary</h4>
+                <div class="summary-item">
+                    <span>Nights:</span>
+                    <span id="summaryNights">0</span>
+                </div>
+                <div class="summary-item">
+                    <span>Total Guests:</span>
+                    <span id="summaryGuests">2 Adults</span>
+                </div>
+                <div class="summary-item">
+                    <span>Rooms Selected:</span>
+                    <span id="summaryRooms">0</span>
+                </div>
+                <div class="summary-item summary-total">
+                    <span>Total Amount:</span>
+                    <span id="summaryTotal">0 MVR</span>
+                </div>
+            </div>
+            
+            <!-- Bank Details -->
+            <div class="bank-details" id="bankDetails">
+                <h4>Bank Transfer Details</h4>
+                <div class="bank-row">
+                    <span>Bank:</span>
+                    <strong id="bankName">Loading...</strong>
+                </div>
+                <div class="bank-row">
+                    <span>Account:</span>
+                    <strong id="accountNumber">Loading...</strong>
+                    <button class="copy-btn" onclick="copyAccountNumber()">Copy</button>
+                </div>
+                <div class="bank-row">
+                    <span>Holder:</span>
+                    <strong id="accountHolder">Loading...</strong>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="bookingName" placeholder="Your full name">
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="bookingEmail" placeholder="Your email">
+            </div>
+            
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" id="bookingPhone" placeholder="Your phone number">
+            </div>
+            
+            <div class="form-group">
+                <label>Special Requests</label>
+                <textarea id="bookingRequests" rows="2" placeholder="Any special requests?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Upload Payment Slip</label>
+                <div class="payment-upload" id="paymentSlipUpload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload payment slip</p>
+                    <input type="file" id="paymentSlip" accept="image/*" style="display: none;">
+                </div>
+                <div id="paymentSlipPreview"></div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeBookingModal()">Cancel</button>
+                <button class="modal-btn confirm" id="submitBookingBtn" onclick="submitBooking()">Submit Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Details Modal -->
+    <div class="modal-overlay" id="roomDetailsModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="roomDetailsTitle">Room Details</h3>
+            </div>
+            
+            <div id="roomDetailsContent">
+                <!-- Room details will be loaded here -->
+            </div>
+            
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeRoomDetailsModal()">Close</button>
+                <button class="modal-btn confirm" id="addToBookingBtn">Add to Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Slip Modal -->
+    <div class="modal-overlay" id="slipModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Payment Slip</h3>
+            </div>
+            <div style="text-align: center;">
+                <img id="slipImage" src="" style="max-width: 100%; max-height: 400px; border-radius: 8px;">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeSlipModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i>
+        <h3 id="successTitle">Success!</h3>
+        <p id="successText">Operation completed successfully</p>
+        <button class="login-submit" onclick="hideSuccess()">Continue</button>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCZA8Z9AJcC97CyQUZVCRsljTuYBfxjHMw",
+            authDomain: "easycargo-9c0cd.firebaseapp.com",
+            databaseURL: "https://easycargo-9c0cd-default-rtdb.firebaseio.com",
+            projectId: "easycargo-9c0cd",
+            storageBucket: "easycargo-9c0cd.firebasestorage.app",
+            messagingSenderId: "51689325187",
+            appId: "1:51689325187:web:c65cb8fb0af2241a4c91b6"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const storage = firebase.storage();
+
+        // Global Variables
+        let currentUser = null;
+        let users = [];
+        let guestHouses = [];
+        let rooms = [];
+        let bookings = [];
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        
+        // Current editing variables
+        let currentRoomId = null;
+        let currentRoomImages = [];
+        let unavailableRanges = [];
+        let currentBookingGH = null;
+        let selectedRooms = []; // Array to store selected rooms with quantities
+        
+        // Guest counts
+        let guestCounts = {
+            adults: 2,
+            children: 0,
+            infants: 0
+        };
+
+        // Initialize
+        function initApp() {
+            loadData();
+            
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showDashboard();
+            }
+        }
+
+        // Load Data
+        function loadData() {
+            database.ref('users').on('value', (snapshot) => {
+                const data = snapshot.val();
+                users = data ? Object.values(data) : [];
+            });
+            
+            database.ref('guestHouses').on('value', (snapshot) => {
+                const data = snapshot.val();
+                guestHouses = data ? Object.values(data) : [];
+                
+                if (currentUser) {
+                    if (currentUser.role === 'guest') {
+                        displayGuestHouses();
+                        displayFavorites();
+                    } else {
+                        loadGuestHouseInfo();
+                    }
+                }
+            });
+            
+            database.ref('rooms').on('value', (snapshot) => {
+                const data = snapshot.val();
+                rooms = data ? Object.values(data) : [];
+                
+                if (currentUser) {
+                    if (currentUser.role === 'owner') {
+                        displayOwnerRooms();
+                    }
+                }
+            });
+            
+            database.ref('bookings').on('value', (snapshot) => {
+                const data = snapshot.val();
+                bookings = data ? Object.values(data) : [];
+                
+                if (currentUser) {
+                    if (currentUser.role === 'guest') {
+                        displayGuestBookings();
+                    } else {
+                        displayOwnerBookings();
+                        updateOwnerStats();
+                        displayGuests();
+                    }
+                }
+            });
+        }
+
+        // Login/Register Elements
+        const loginPage = document.getElementById('loginPage');
+        const dashboardPage = document.getElementById('dashboardPage');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        
+        // Role buttons
+        const roleBtns = document.querySelectorAll('.role-btn');
+        const ownerFields = document.getElementById('ownerFields');
+        
+        // Toggle Forms
+        showRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+        
+        showLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+        
+        // Role Selection
+        roleBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const parent = this.parentElement;
+                parent.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                if (parent.parentElement.id === 'registerForm') {
+                    ownerFields.style.display = this.dataset.role === 'owner' ? 'block' : 'none';
+                }
+            });
+        });
+        
+        // Login
+        loginBtn.addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const role = document.querySelector('#loginForm .role-btn.active').dataset.role;
+            
+            if (!email || !password) {
+                showNotification('Please enter email and password');
+                return;
+            }
+            
+            const user = users.find(u => u.email === email && u.password === password && u.role === role);
+            
+            if (!user) {
+                showNotification('Invalid email or password');
+                return;
+            }
+            
+            currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            showSuccess('Login Successful!', `Welcome back, ${user.name}`);
+            setTimeout(() => {
+                hideSuccess();
+                showDashboard();
+            }, 2000);
+        });
+        
+        // Register
+        registerBtn.addEventListener('click', async () => {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const phone = document.getElementById('regPhone').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const role = document.querySelector('#registerForm .role-btn.active').dataset.role;
+            
+            if (!name || !email || !phone || !password) {
+                showNotification('Please fill all fields');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match');
+                return;
+            }
+            
+            if (users.some(u => u.email === email)) {
+                showNotification('Email already registered');
+                return;
+            }
+            
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                phone: phone,
+                password: password,
+                role: role
+            };
+            
+            await database.ref('users/' + newUser.id).set(newUser);
+            
+            if (role === 'owner') {
+                const ghName = document.getElementById('regGuestHouseName').value;
+                const island = document.getElementById('regIsland').value;
+                
+                if (!ghName || !island) {
+                    showNotification('Please fill guest house details');
+                    return;
+                }
+                
+                const guestHouse = {
+                    id: Date.now() + 1,
+                    ownerId: newUser.id,
+                    name: ghName,
+                    island: island,
+                    description: 'Welcome to our guest house in the Maldives!',
+                    address: '',
+                    contact: phone,
+                    email: email,
+                    facilities: ['WiFi', 'Restaurant'],
+                    images: [],
+                    bankName: 'Bank of Maldives',
+                    accountHolder: name,
+                    accountNumber: '1234567890',
+                    bankBranch: 'Main Branch',
+                    createdAt: new Date().toISOString()
+                };
+                
+                await database.ref('guestHouses/' + guestHouse.id).set(guestHouse);
+            }
+            
+            showSuccess('Registration Successful!', 'Please login to continue');
+            setTimeout(() => {
+                hideSuccess();
+                registerForm.style.display = 'none';
+                loginForm.style.display = 'block';
+            }, 2000);
+        });
+        
+        // Show Dashboard
+        function showDashboard() {
+            loginPage.style.display = 'none';
+            dashboardPage.style.display = 'block';
+            
+            document.getElementById('sidebarUserName').textContent = currentUser.name;
+            document.getElementById('sidebarUserRole').textContent = 
+                currentUser.role === 'owner' ? 'Guest House Owner' : 'Guest';
+            
+            setupMenu();
+            setupBottomNav();
+            
+            if (currentUser.role === 'guest') {
+                showSection('guestHome');
+                displayGuestHouses();
+                loadGuestProfile();
+            } else {
+                showSection('ownerDashboard');
+                loadGuestHouseInfo();
+                updateOwnerStats();
+            }
+        }
+        
+        // Setup Menu
+        function setupMenu() {
+            const menu = document.getElementById('sidebarMenu');
+            if (currentUser.role === 'guest') {
+                menu.innerHTML = `
+                    <div class="menu-item active" onclick="showSection('guestHome')">
+                        <i class="fas fa-search"></i> Browse
+                    </div>
+                    <div class="menu-item" onclick="showSection('guestFavorites')">
+                        <i class="fas fa-heart"></i> Favorites
+                    </div>
+                    <div class="menu-item" onclick="showSection('guestBookings')">
+                        <i class="fas fa-calendar-check"></i> My Bookings
+                    </div>
+                    <div class="menu-item" onclick="showSection('guestProfile')">
+                        <i class="fas fa-user"></i> Profile
+                    </div>
+                `;
+            } else {
+                menu.innerHTML = `
+                    <div class="menu-item active" onclick="showSection('ownerDashboard')">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </div>
+                    <div class="menu-item" onclick="showSection('ownerRooms')">
+                        <i class="fas fa-bed"></i> Rooms
+                    </div>
+                    <div class="menu-item" onclick="showSection('ownerBookings')">
+                        <i class="fas fa-calendar-check"></i> Bookings
+                    </div>
+                    <div class="menu-item" onclick="showSection('ownerGuests')">
+                        <i class="fas fa-users"></i> Guests
+                    </div>
+                    <div class="menu-item" onclick="showSection('ownerSettings')">
+                        <i class="fas fa-cog"></i> Settings
+                    </div>
+                `;
+            }
+        }
+        
+        // Setup Bottom Navigation
+        function setupBottomNav() {
+            const bottomNav = document.getElementById('bottomNav');
+            if (currentUser.role === 'guest') {
+                bottomNav.innerHTML = `
+                    <div class="nav-item active" onclick="showSection('guestHome')">
+                        <i class="fas fa-search"></i>
+                        <span>Browse</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('guestFavorites')">
+                        <i class="fas fa-heart"></i>
+                        <span>Favorites</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('guestBookings')">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Bookings</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('guestProfile')">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </div>
+                `;
+            } else {
+                bottomNav.innerHTML = `
+                    <div class="nav-item active" onclick="showSection('ownerDashboard')">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Home</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('ownerRooms')">
+                        <i class="fas fa-bed"></i>
+                        <span>Rooms</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('ownerBookings')">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Bookings</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('ownerSettings')">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </div>
+                `;
+            }
+        }
+        
+        // Show Section
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            if (sectionId === 'guestHome') {
+                displayGuestHouses();
+            } else if (sectionId === 'guestFavorites') {
+                displayFavorites();
+            } else if (sectionId === 'guestBookings') {
+                displayGuestBookings();
+            } else if (sectionId === 'guestProfile') {
+                loadGuestProfile();
+            } else if (sectionId === 'ownerRooms') {
+                displayOwnerRooms();
+            } else if (sectionId === 'ownerBookings') {
+                displayOwnerBookings();
+            } else if (sectionId === 'ownerGuests') {
+                displayGuests();
+            }
+        }
+        
+        // Display Guest Houses
+        function displayGuestHouses() {
+            const container = document.getElementById('guestHousesList');
+            container.innerHTML = '';
+            
+            if (!guestHouses || guestHouses.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-hotel"></i><p>No guest houses available</p></div>';
+                return;
+            }
+            
+            guestHouses.forEach(gh => {
+                const ghRooms = rooms.filter(r => r.guestHouseId === gh.id);
+                const minPrice = ghRooms.length > 0 ? Math.min(...ghRooms.map(r => r.price)) : 0;
+                const availableRooms = ghRooms.filter(r => checkRoomAvailability(r)).length;
+                const isFavorite = favorites.includes(gh.id);
+                
+                const card = document.createElement('div');
+                card.className = 'guesthouse-card';
+                card.onclick = () => openBookingModal(gh.id);
+                
+                const imageUrl = gh.images && gh.images.length > 0 ? gh.images[0] : 'https://via.placeholder.com/400x300?text=' + gh.name;
+                
+                card.innerHTML = `
+                    <div class="card-image" style="background-image: url('${imageUrl}')">
+                        <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(${gh.id}, event)">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i> ${gh.rating || '4.5'}
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">${gh.name}</div>
+                        <div class="card-location">
+                            <i class="fas fa-map-marker-alt"></i> ${gh.island}
+                        </div>
+                        <div class="card-facilities">
+                            ${(gh.facilities || []).slice(0, 3).map(f => `
+                                <span class="facility-tag"><i class="fas fa-check"></i> ${f}</span>
+                            `).join('')}
+                        </div>
+                        <div class="card-price">
+                            <div>
+                                <span class="price">${minPrice} <small>MVR</small></span>
+                                <span style="color: #666; font-size: 12px;">per night</span>
+                            </div>
+                            <span class="availability-badge ${availableRooms > 0 ? 'available' : 'unavailable'}">
+                                ${availableRooms} rooms
+                            </span>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Toggle Favorite
+        function toggleFavorite(ghId, event) {
+            event.stopPropagation();
+            
+            const index = favorites.indexOf(ghId);
+            if (index === -1) {
+                favorites.push(ghId);
+                showNotification('Added to favorites');
+            } else {
+                favorites.splice(index, 1);
+                showNotification('Removed from favorites');
+            }
+            
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            displayGuestHouses();
+        }
+        
+        // Display Favorites
+        function displayFavorites() {
+            const container = document.getElementById('favoritesList');
+            container.innerHTML = '';
+            
+            const favGuestHouses = guestHouses.filter(gh => favorites.includes(gh.id));
+            
+            if (favGuestHouses.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>No favorites yet</p></div>';
+                return;
+            }
+            
+            favGuestHouses.forEach(gh => {
+                const ghRooms = rooms.filter(r => r.guestHouseId === gh.id);
+                const minPrice = ghRooms.length > 0 ? Math.min(...ghRooms.map(r => r.price)) : 0;
+                
+                const card = document.createElement('div');
+                card.className = 'guesthouse-card';
+                card.onclick = () => openBookingModal(gh.id);
+                
+                const imageUrl = gh.images && gh.images.length > 0 ? gh.images[0] : 'https://via.placeholder.com/400x300?text=' + gh.name;
+                
+                card.innerHTML = `
+                    <div class="card-image" style="background-image: url('${imageUrl}')">
+                        <button class="favorite-btn active" onclick="toggleFavorite(${gh.id}, event)">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">${gh.name}</div>
+                        <div class="card-location">
+                            <i class="fas fa-map-marker-alt"></i> ${gh.island}
+                        </div>
+                        <div class="card-price">
+                            <div>
+                                <span class="price">${minPrice} <small>MVR</small></span>
+                            </div>
+                            <button class="book-now-btn" onclick="event.stopPropagation(); openBookingModal(${gh.id})">Book</button>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Check Room Availability
+        function checkRoomAvailability(room) {
+            if (!room.unavailableDates || room.unavailableDates.length === 0) return true;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const todayTime = new Date(today).getTime();
+            
+            for (const range of room.unavailableDates) {
+                const fromTime = new Date(range.from).getTime();
+                const toTime = new Date(range.to).getTime();
+                
+                if (todayTime >= fromTime && todayTime <= toTime) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // Check Room Availability for Dates
+        function checkRoomAvailabilityForDates(room, checkIn, checkOut) {
+            if (!room.unavailableDates || room.unavailableDates.length === 0) return true;
+            
+            const checkInTime = new Date(checkIn).getTime();
+            const checkOutTime = new Date(checkOut).getTime();
+            
+            for (const range of room.unavailableDates) {
+                const fromTime = new Date(range.from).getTime();
+                const toTime = new Date(range.to).getTime();
+                
+                if (checkInTime <= toTime && checkOutTime >= fromTime) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // Update Guest Count
+        function updateGuestCount(type, change) {
+            const newValue = guestCounts[type] + change;
+            if (newValue < 0) return;
+            if (type === 'adults' && newValue === 0) return; // At least 1 adult
+            
+            guestCounts[type] = newValue;
+            document.getElementById(type + 'Count').textContent = newValue;
+            updateBookingSummary();
+        }
+        
+        // Open Booking Modal
+        function openBookingModal(ghId) {
+            const gh = guestHouses.find(g => g.id === ghId);
+            if (!gh) return;
+            
+            currentBookingGH = gh;
+            selectedRooms = [];
+            
+            document.getElementById('bookingGHName').textContent = gh.name;
+            
+            // Reset guest counts
+            guestCounts = { adults: 2, children: 0, infants: 0 };
+            document.getElementById('adultsCount').textContent = '2';
+            document.getElementById('childrenCount').textContent = '0';
+            document.getElementById('infantsCount').textContent = '0';
+            
+            // Set min dates
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingCheckIn').min = today;
+            document.getElementById('bookingCheckIn').value = today;
+            
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('bookingCheckOut').min = tomorrow.toISOString().split('T')[0];
+            document.getElementById('bookingCheckOut').value = tomorrow.toISOString().split('T')[0];
+            
+            // Load available rooms
+            loadAvailableRooms();
+            
+            // Set bank details
+            document.getElementById('bankName').textContent = gh.bankName || 'Bank of Maldives';
+            document.getElementById('accountNumber').textContent = gh.accountNumber || '1234567890';
+            document.getElementById('accountHolder').textContent = gh.accountHolder || gh.name;
+            
+            // Pre-fill user info
+            if (currentUser) {
+                document.getElementById('bookingName').value = currentUser.name || '';
+                document.getElementById('bookingEmail').value = currentUser.email || '';
+                document.getElementById('bookingPhone').value = currentUser.phone || '';
+            }
+            
+            updateBookingSummary();
+            
+            document.getElementById('bookingModal').classList.add('active');
+        }
+        
+        // Load Available Rooms
+        function loadAvailableRooms() {
+            const container = document.getElementById('availableRoomsList');
+            if (!currentBookingGH) return;
+            
+            const ghRooms = rooms.filter(r => r.guestHouseId === currentBookingGH.id);
+            
+            if (ghRooms.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px;">No rooms available</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            ghRooms.forEach(room => {
+                const isAvailable = checkRoomAvailability(room);
+                if (!isAvailable) return;
+                
+                const roomImage = room.images && room.images.length > 0 ? room.images[0] : 'https://via.placeholder.com/300x200?text=Room';
+                
+                const card = document.createElement('div');
+                card.className = 'room-card';
+                card.onclick = () => showRoomDetails(room.id);
+                
+                card.innerHTML = `
+                    <div class="room-image" style="background-image: url('${roomImage}')">
+                        <div class="room-status available">Available</div>
+                        ${room.images && room.images.length > 1 ? `
+                            <div class="room-image-gallery">
+                                <i class="fas fa-images"></i> ${room.images.length}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="room-info">
+                        <div class="room-type">${room.type} ${room.number ? `- ${room.number}` : ''}</div>
+                        <div class="room-capacity">
+                            <i class="fas fa-users"></i> Max ${room.capacity} guests
+                        </div>
+                        <div class="room-price">${room.price} MVR / night</div>
+                        <div class="room-selector">
+                            <span>Quantity:</span>
+                            <input type="number" min="0" max="3" value="0" 
+                                   onchange="updateRoomSelection(${room.id}, this.value)" 
+                                   onclick="event.stopPropagation()">
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Update Room Selection
+        function updateRoomSelection(roomId, quantity) {
+            quantity = parseInt(quantity) || 0;
+            
+            const room = rooms.find(r => r.id === roomId);
+            if (!room) return;
+            
+            const existingIndex = selectedRooms.findIndex(r => r.roomId === roomId);
+            
+            if (quantity > 0) {
+                if (existingIndex >= 0) {
+                    selectedRooms[existingIndex].quantity = quantity;
+                } else {
+                    selectedRooms.push({
+                        roomId: roomId,
+                        room: room,
+                        quantity: quantity,
+                        pricePerNight: room.price
+                    });
+                }
+            } else {
+                if (existingIndex >= 0) {
+                    selectedRooms.splice(existingIndex, 1);
+                }
+            }
+            
+            displaySelectedRooms();
+            updateBookingSummary();
+        }
+        
+        // Display Selected Rooms
+        function displaySelectedRooms() {
+            const container = document.getElementById('selectedRoomsContainer');
+            
+            if (selectedRooms.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '<h4 style="margin-bottom: 10px;">Selected Rooms:</h4>';
+            selectedRooms.forEach(item => {
+                html += `
+                    <div class="selected-room-item">
+                        <div class="selected-room-info">
+                            <h4>${item.room.type} ${item.room.number ? `- ${item.room.number}` : ''}</h4>
+                            <p>${item.quantity} x ${item.room.price} MVR/night</p>
+                        </div>
+                        <span class="remove-room" onclick="removeRoom(${item.roomId})">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Remove Room
+        function removeRoom(roomId) {
+            const index = selectedRooms.findIndex(r => r.roomId === roomId);
+            if (index >= 0) {
+                selectedRooms.splice(index, 1);
+                
+                // Reset the input
+                const input = document.querySelector(`input[onchange*="updateRoomSelection(${roomId}"]`);
+                if (input) input.value = 0;
+                
+                displaySelectedRooms();
+                updateBookingSummary();
+            }
+        }
+        
+        // Show Room Details
+        function showRoomDetails(roomId) {
+            const room = rooms.find(r => r.id === roomId);
+            if (!room) return;
+            
+            const modal = document.getElementById('roomDetailsModal');
+            const content = document.getElementById('roomDetailsContent');
+            
+            let imagesHtml = '';
+            if (room.images && room.images.length > 0) {
+                imagesHtml = `
+                    <div style="display: flex; gap: 10px; overflow-x: auto; padding: 10px 0;">
+                        ${room.images.map(img => `
+                            <img src="${img}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 8px;">
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            let amenitiesHtml = '';
+            if (room.amenities && room.amenities.length > 0) {
+                amenitiesHtml = `
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0;">
+                        ${room.amenities.map(a => `
+                            <span class="facility-tag"><i class="fas fa-check"></i> ${a}</span>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            content.innerHTML = `
+                ${imagesHtml}
+                <h4 style="margin: 15px 0 5px;">${room.type} ${room.number ? `- ${room.number}` : ''}</h4>
+                <p><i class="fas fa-users"></i> Capacity: ${room.capacity} persons</p>
+                <p><i class="fas fa-tag"></i> Price: ${room.price} MVR / night</p>
+                <p>${room.description || 'No description available'}</p>
+                ${amenitiesHtml}
+            `;
+            
+            document.getElementById('roomDetailsTitle').textContent = currentBookingGH.name;
+            document.getElementById('addToBookingBtn').onclick = () => {
+                const input = document.querySelector(`input[onchange*="updateRoomSelection(${roomId}"]`);
+                if (input) {
+                    const currentValue = parseInt(input.value) || 0;
+                    input.value = currentValue + 1;
+                    updateRoomSelection(roomId, currentValue + 1);
+                }
+                closeRoomDetailsModal();
+            };
+            
+            modal.classList.add('active');
+        }
+        
+        // Close Room Details Modal
+        function closeRoomDetailsModal() {
+            document.getElementById('roomDetailsModal').classList.remove('active');
+        }
+        
+        // Update Booking Summary
+        function updateBookingSummary() {
+            const checkIn = document.getElementById('bookingCheckIn').value;
+            const checkOut = document.getElementById('bookingCheckOut').value;
+            
+            if (!checkIn || !checkOut) return;
+            
+            const nights = calculateNights(checkIn, checkOut);
+            document.getElementById('summaryNights').textContent = nights;
+            
+            const totalGuests = guestCounts.adults + guestCounts.children + guestCounts.infants;
+            let guestText = `${guestCounts.adults} Adults`;
+            if (guestCounts.children > 0) guestText += `, ${guestCounts.children} Children`;
+            if (guestCounts.infants > 0) guestText += `, ${guestCounts.infants} Infants`;
+            document.getElementById('summaryGuests').textContent = guestText;
+            
+            document.getElementById('summaryRooms').textContent = selectedRooms.length;
+            
+            let total = 0;
+            selectedRooms.forEach(item => {
+                total += item.quantity * item.pricePerNight * nights;
+            });
+            
+            document.getElementById('summaryTotal').textContent = total + ' MVR';
+        }
+        
+        // Calculate Nights
+        function calculateNights(checkIn, checkOut) {
+            const start = new Date(checkIn);
+            const end = new Date(checkOut);
+            const diffTime = Math.abs(end - start);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+        }
+        
+        // Copy Account Number
+        function copyAccountNumber() {
+            const accountNumber = document.getElementById('accountNumber').textContent;
+            navigator.clipboard.writeText(accountNumber).then(() => {
+                showNotification('Account number copied!');
+            });
+        }
+        
+        // Payment Slip Upload
+        const paymentSlipUpload = document.getElementById('paymentSlipUpload');
+        const paymentSlipInput = document.getElementById('paymentSlip');
+        const paymentSlipPreview = document.getElementById('paymentSlipPreview');
+        
+        paymentSlipUpload?.addEventListener('click', () => paymentSlipInput.click());
+        
+        paymentSlipUpload?.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            paymentSlipUpload.style.borderColor = '#00a8cc';
+        });
+        
+        paymentSlipUpload?.addEventListener('dragleave', () => {
+            paymentSlipUpload.style.borderColor = '#ddd';
+        });
+        
+        paymentSlipUpload?.addEventListener('drop', (e) => {
+            e.preventDefault();
+            paymentSlipUpload.style.borderColor = '#ddd';
+            handlePaymentSlip(e.dataTransfer.files[0]);
+        });
+        
+        paymentSlipInput?.addEventListener('change', () => {
+            if (paymentSlipInput.files[0]) {
+                handlePaymentSlip(paymentSlipInput.files[0]);
+            }
+        });
+        
+        function handlePaymentSlip(file) {
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                paymentSlipPreview.innerHTML = `
+                    <img src="${e.target.result}" class="payment-preview">
+                `;
+                window.paymentSlipData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Submit Booking
+        function submitBooking() {
+            if (!currentBookingGH) return;
+            
+            const name = document.getElementById('bookingName').value;
+            const email = document.getElementById('bookingEmail').value;
+            const phone = document.getElementById('bookingPhone').value;
+            const checkIn = document.getElementById('bookingCheckIn').value;
+            const checkOut = document.getElementById('bookingCheckOut').value;
+            
+            if (!name || !email || !phone) {
+                showNotification('Please fill all contact details');
+                return;
+            }
+            
+            if (selectedRooms.length === 0) {
+                showNotification('Please select at least one room');
+                return;
+            }
+            
+            if (!window.paymentSlipData) {
+                showNotification('Please upload payment slip');
+                return;
+            }
+            
+            const nights = calculateNights(checkIn, checkOut);
+            let total = 0;
+            const bookedRooms = [];
+            
+            selectedRooms.forEach(item => {
+                total += item.quantity * item.pricePerNight * nights;
+                for (let i = 0; i < item.quantity; i++) {
+                    bookedRooms.push({
+                        roomId: item.roomId,
+                        roomType: item.room.type,
+                        pricePerNight: item.pricePerNight
+                    });
+                }
+            });
+            
+            const booking = {
+                id: Date.now(),
+                bookingId: 'BK' + Date.now().toString().slice(-8),
+                guestName: name,
+                guestEmail: email,
+                guestPhone: phone,
+                guestHouseId: currentBookingGH.id,
+                guestHouseName: currentBookingGH.name,
+                bookedRooms: bookedRooms,
+                checkIn: checkIn,
+                checkOut: checkOut,
+                nights: nights,
+                guests: {
+                    adults: guestCounts.adults,
+                    children: guestCounts.children,
+                    infants: guestCounts.infants
+                },
+                total: total,
+                status: 'pending',
+                requests: document.getElementById('bookingRequests').value,
+                paymentSlip: window.paymentSlipData,
+                createdAt: new Date().toISOString()
+            };
+            
+            database.ref('bookings/' + booking.id).set(booking);
+            
+            closeBookingModal();
+            
+            showSuccess('Booking Submitted!', `Booking ID: ${booking.bookingId}. Please wait for owner approval.`);
+            setTimeout(hideSuccess, 3000);
+        }
+        
+        // Close Booking Modal
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('active');
+            paymentSlipPreview.innerHTML = '';
+            window.paymentSlipData = null;
+            selectedRooms = [];
+        }
+        
+        // Display Guest Bookings
+        function displayGuestBookings() {
+            const container = document.getElementById('guestBookingsList');
+            container.innerHTML = '';
+            
+            const guestBookings = bookings.filter(b => b.guestEmail === currentUser?.email);
+            
+            if (guestBookings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-times"></i><p>No bookings yet</p></div>';
+                return;
+            }
+            
+            guestBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            guestBookings.forEach(booking => {
+                const card = document.createElement('div');
+                card.className = 'guesthouse-card';
+                
+                const statusClass = `status-${booking.status}`;
+                const statusText = booking.status.charAt(0).toUpperCase() + booking.status.slice(1);
+                
+                card.innerHTML = `
+                    <div class="card-content">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span class="card-title">${booking.guestHouseName}</span>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <p><strong>Rooms:</strong> ${booking.bookedRooms.length}</p>
+                            <p><strong>Check-in:</strong> ${booking.checkIn}</p>
+                            <p><strong>Check-out:</strong> ${booking.checkOut}</p>
+                            <p><strong>Guests:</strong> ${booking.guests.adults} Adults, ${booking.guests.children} Children, ${booking.guests.infants} Infants</p>
+                            <p><strong>Total:</strong> ${booking.total} MVR</p>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="action-btn view-btn" onclick="viewBookingDetails(${booking.id})">
+                                View Details
+                            </button>
+                            ${booking.status === 'pending' ? `
+                                <button class="action-btn reject-btn" onclick="cancelBooking(${booking.id})">
+                                    Cancel
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // View Booking Details
+        function viewBookingDetails(bookingId) {
+            const booking = bookings.find(b => b.id === bookingId);
+            if (!booking) return;
+            
+            let roomsList = '';
+            booking.bookedRooms.forEach((room, index) => {
+                roomsList += `<p>Room ${index + 1}: ${room.roomType} - ${room.pricePerNight} MVR/night</p>`;
+            });
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>Booking Details</h3>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
+                        <p><strong>Status:</strong> <span class="status-badge status-${booking.status}">${booking.status}</span></p>
+                    </div>
+                    
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="margin-bottom: 10px;">Guest Information</h4>
+                        <p><strong>Name:</strong> ${booking.guestName}</p>
+                        <p><strong>Email:</strong> ${booking.guestEmail}</p>
+                        <p><strong>Phone:</strong> ${booking.guestPhone}</p>
+                    </div>
+                    
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="margin-bottom: 10px;">Booking Details</h4>
+                        <p><strong>Guest House:</strong> ${booking.guestHouseName}</p>
+                        <p><strong>Rooms:</strong></p>
+                        ${roomsList}
+                        <p><strong>Check-in:</strong> ${booking.checkIn}</p>
+                        <p><strong>Check-out:</strong> ${booking.checkOut}</p>
+                        <p><strong>Nights:</strong> ${booking.nights}</p>
+                        <p><strong>Guests:</strong> ${booking.guests.adults} Adults, ${booking.guests.children} Children, ${booking.guests.infants} Infants</p>
+                        <p><strong>Total:</strong> ${booking.total} MVR</p>
+                    </div>
+                    
+                    ${booking.paymentSlip ? `
+                        <div style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 10px;">Payment Slip</h4>
+                            <img src="${booking.paymentSlip}" style="max-width: 100%; border-radius: 10px; cursor: pointer;" onclick="showPaymentSlip('${booking.paymentSlip}')">
+                        </div>
+                    ` : ''}
+                    
+                    <div class="modal-footer">
+                        <button class="modal-btn cancel" onclick="this.closest('.modal-overlay').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        // Show Payment Slip
+        function showPaymentSlip(url) {
+            document.getElementById('slipImage').src = url;
+            document.getElementById('slipModal').classList.add('active');
+        }
+        
+        function closeSlipModal() {
+            document.getElementById('slipModal').classList.remove('active');
+        }
+        
+        // Cancel Booking
+        async function cancelBooking(bookingId) {
+            if (!confirm('Are you sure you want to cancel this booking?')) return;
+            
+            const booking = bookings.find(b => b.id === bookingId);
+            if (booking) {
+                booking.status = 'cancelled';
+                await database.ref('bookings/' + booking.id).set(booking);
+                showNotification('Booking cancelled');
+                displayGuestBookings();
+            }
+        }
+        
+        // Load Guest Profile
+        function loadGuestProfile() {
+            document.getElementById('profileName').value = currentUser.name || '';
+            document.getElementById('profileEmail').value = currentUser.email || '';
+            document.getElementById('profilePhone').value = currentUser.phone || '';
+        }
+        
+        // Display Owner Rooms
+        function displayOwnerRooms() {
+            const container = document.getElementById('ownerRoomsList');
+            container.innerHTML = '';
+            
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!ownerGH) return;
+            
+            const ownerRooms = rooms.filter(r => r.guestHouseId === ownerGH.id);
+            
+            if (ownerRooms.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-bed"></i><p>No rooms added yet</p></div>';
+                return;
+            }
+            
+            ownerRooms.forEach(room => {
+                const isAvailable = checkRoomAvailability(room);
+                const roomImage = room.images && room.images.length > 0 ? room.images[0] : 'https://via.placeholder.com/300x200?text=Room';
+                
+                const card = document.createElement('div');
+                card.className = 'room-card';
+                
+                card.innerHTML = `
+                    <div class="room-image" style="background-image: url('${roomImage}')">
+                        <div class="room-status ${isAvailable ? 'available' : 'unavailable'}">
+                            ${isAvailable ? 'Available' : 'Unavailable'}
+                        </div>
+                        ${room.images && room.images.length > 1 ? `
+                            <div class="room-image-gallery">
+                                <i class="fas fa-images"></i> ${room.images.length}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="room-info">
+                        <div class="room-type">
+                            ${room.type} ${room.number ? `- ${room.number}` : ''}
+                        </div>
+                        <div class="room-capacity">
+                            <i class="fas fa-users"></i> ${room.capacity} persons
+                        </div>
+                        <div class="room-price">${room.price} MVR / night</div>
+                        ${room.unavailableDates && room.unavailableDates.length > 0 ? `
+                            <div class="room-dates">
+                                <i class="fas fa-calendar-times"></i> ${room.unavailableDates.length} unavailable periods
+                            </div>
+                        ` : ''}
+                        <div style="display: flex; gap: 5px; margin-top: 10px;">
+                            <button class="action-btn edit-btn" onclick="editRoom(${room.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteRoom(${room.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Open Room Modal
+        function openRoomModal(roomId = null) {
+            currentRoomId = roomId;
+            
+            // Set min date for unavailable dates
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('unavailableFrom').min = today;
+            document.getElementById('unavailableTo').min = today;
+            
+            if (roomId) {
+                const room = rooms.find(r => r.id === roomId);
+                if (room) {
+                    document.getElementById('roomModalTitle').textContent = 'Edit Room';
+                    document.getElementById('roomType').value = room.type;
+                    document.getElementById('roomNumber').value = room.number || '';
+                    document.getElementById('roomCapacity').value = room.capacity;
+                    document.getElementById('roomPrice').value = room.price;
+                    document.getElementById('roomDescription').value = room.description || '';
+                    
+                    // Set checkboxes
+                    document.querySelectorAll('#roomModal input[type="checkbox"]').forEach(cb => {
+                        cb.checked = room.amenities?.includes(cb.value) || false;
+                    });
+                    
+                    // Set images
+                    currentRoomImages = room.images || [];
+                    displayRoomImagePreviews();
+                    
+                    // Set unavailable dates
+                    unavailableRanges = room.unavailableDates || [];
+                    displayUnavailableRanges();
+                }
+            } else {
+                document.getElementById('roomModalTitle').textContent = 'Add New Room';
+                document.getElementById('roomType').value = 'Standard';
+                document.getElementById('roomNumber').value = '';
+                document.getElementById('roomCapacity').value = '2';
+                document.getElementById('roomPrice').value = '';
+                document.getElementById('roomDescription').value = '';
+                
+                document.querySelectorAll('#roomModal input[type="checkbox"]').forEach(cb => cb.checked = false);
+                
+                currentRoomImages = [];
+                document.getElementById('roomImagePreview').innerHTML = '';
+                
+                unavailableRanges = [];
+                document.getElementById('unavailableDatesList').innerHTML = '';
+            }
+            
+            document.getElementById('roomModal').classList.add('active');
+        }
+        
+        // Room Image Upload
+        const roomImageUpload = document.getElementById('roomImageUpload');
+        const roomImagesInput = document.getElementById('roomImages');
+        
+        roomImageUpload?.addEventListener('click', () => roomImagesInput.click());
+        
+        roomImageUpload?.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            roomImageUpload.style.borderColor = '#00a8cc';
+        });
+        
+        roomImageUpload?.addEventListener('dragleave', () => {
+            roomImageUpload.style.borderColor = '#ddd';
+        });
+        
+        roomImageUpload?.addEventListener('drop', (e) => {
+            e.preventDefault();
+            roomImageUpload.style.borderColor = '#ddd';
+            handleRoomImages(e.dataTransfer.files);
+        });
+        
+        roomImagesInput?.addEventListener('change', () => {
+            handleRoomImages(roomImagesInput.files);
+        });
+        
+        function handleRoomImages(files) {
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        currentRoomImages.push(e.target.result);
+                        displayRoomImagePreviews();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        function displayRoomImagePreviews() {
+            const preview = document.getElementById('roomImagePreview');
+            preview.innerHTML = '';
+            
+            currentRoomImages.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                div.innerHTML = `
+                    <img src="${img}">
+                    <div class="remove-image" onclick="removeRoomImage(${index})">×</div>
+                `;
+                preview.appendChild(div);
+            });
+        }
+        
+        function removeRoomImage(index) {
+            currentRoomImages.splice(index, 1);
+            displayRoomImagePreviews();
+        }
+        
+        // Add Unavailable Range
+        function addUnavailableRange() {
+            const fromDate = document.getElementById('unavailableFrom').value;
+            const toDate = document.getElementById('unavailableTo').value;
+            
+            if (!fromDate || !toDate) {
+                showNotification('Please select both dates');
+                return;
+            }
+            
+            if (new Date(fromDate) > new Date(toDate)) {
+                showNotification('From date must be before to date');
+                return;
+            }
+            
+            unavailableRanges.push({ from: fromDate, to: toDate });
+            displayUnavailableRanges();
+            
+            document.getElementById('unavailableFrom').value = '';
+            document.getElementById('unavailableTo').value = '';
+        }
+        
+        function displayUnavailableRanges() {
+            const list = document.getElementById('unavailableDatesList');
+            list.innerHTML = '';
+            
+            unavailableRanges.forEach((range, index) => {
+                const div = document.createElement('div');
+                div.className = 'date-range-item';
+                div.innerHTML = `
+                    <span>${range.from} to ${range.to}</span>
+                    <span class="remove" onclick="removeUnavailableRange(${index})">×</span>
+                `;
+                list.appendChild(div);
+            });
+        }
+        
+        function removeUnavailableRange(index) {
+            unavailableRanges.splice(index, 1);
+            displayUnavailableRanges();
+        }
+        
+        // Save Room
+        document.getElementById('saveRoomBtn')?.addEventListener('click', async () => {
+            const type = document.getElementById('roomType').value;
+            const number = document.getElementById('roomNumber').value;
+            const capacity = document.getElementById('roomCapacity').value;
+            const price = document.getElementById('roomPrice').value;
+            const description = document.getElementById('roomDescription').value;
+            
+            if (!type || !capacity || !price) {
+                showNotification('Please fill required fields');
+                return;
+            }
+            
+            const amenities = [];
+            document.querySelectorAll('#roomModal input[type="checkbox"]:checked').forEach(cb => {
+                amenities.push(cb.value);
+            });
+            
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!ownerGH) return;
+            
+            const roomData = {
+                id: currentRoomId || Date.now(),
+                guestHouseId: ownerGH.id,
+                type: type,
+                number: number,
+                capacity: parseInt(capacity),
+                price: parseFloat(price),
+                description: description,
+                amenities: amenities,
+                images: currentRoomImages,
+                unavailableDates: unavailableRanges,
+                createdAt: new Date().toISOString()
+            };
+            
+            await database.ref('rooms/' + roomData.id).set(roomData);
+            
+            closeRoomModal();
+            showNotification(currentRoomId ? 'Room updated' : 'Room added');
+            displayOwnerRooms();
+        });
+        
+        // Edit Room
+        function editRoom(roomId) {
+            openRoomModal(roomId);
+        }
+        
+        // Delete Room
+        async function deleteRoom(roomId) {
+            if (!confirm('Are you sure you want to delete this room?')) return;
+            
+            const hasBookings = bookings.some(b => b.roomId === roomId && 
+                (b.status === 'pending' || b.status === 'approved'));
+            
+            if (hasBookings) {
+                showNotification('Cannot delete room with active bookings');
+                return;
+            }
+            
+            await database.ref('rooms/' + roomId).remove();
+            showNotification('Room deleted');
+            displayOwnerRooms();
+        }
+        
+        // Close Room Modal
+        function closeRoomModal() {
+            document.getElementById('roomModal').classList.remove('active');
+            currentRoomId = null;
+            currentRoomImages = [];
+            unavailableRanges = [];
+        }
+        
+        // Display Owner Bookings
+        function displayOwnerBookings() {
+            const tbody = document.getElementById('ownerBookingsTable');
+            tbody.innerHTML = '';
+            
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!ownerGH) return;
+            
+            const ownerBookings = bookings.filter(b => b.guestHouseId === ownerGH.id);
+            
+            if (ownerBookings.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No bookings found</td></tr>';
+                return;
+            }
+            
+            ownerBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            ownerBookings.forEach(booking => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${booking.bookingId}</td>
+                    <td>
+                        ${booking.guestName}<br>
+                        <small>${booking.guestPhone}</small>
+                    </td>
+                    <td>${booking.bookedRooms.length} rooms</td>
+                    <td>
+                        ${booking.checkIn} to ${booking.checkOut}<br>
+                        <small>${booking.nights} nights</small>
+                    </td>
+                    <td>${booking.total} MVR</td>
+                    <td>
+                        ${booking.paymentSlip ? 
+                            `<button class="action-btn view-btn" onclick="showPaymentSlip('${booking.paymentSlip}')">View Slip</button>` : 
+                            'No slip'}
+                    </td>
+                    <td>
+                        <span class="status-badge status-${booking.status}">${booking.status}</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn view-btn" onclick="viewBookingDetails(${booking.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${booking.status === 'pending' ? `
+                                <button class="action-btn approve-btn" onclick="updateBookingStatus(${booking.id}, 'approved')">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="action-btn reject-btn" onclick="updateBookingStatus(${booking.id}, 'rejected')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            ` : ''}
+                            ${booking.status === 'approved' ? `
+                                <button class="action-btn edit-btn" onclick="updateBookingStatus(${booking.id}, 'checked-in')">
+                                    Check In
+                                </button>
+                            ` : ''}
+                            ${booking.status === 'checked-in' ? `
+                                <button class="action-btn view-btn" onclick="updateBookingStatus(${booking.id}, 'checked-out')">
+                                    Check Out
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Update Booking Status
+        async function updateBookingStatus(bookingId, status) {
+            const booking = bookings.find(b => b.id === bookingId);
+            if (booking) {
+                booking.status = status;
+                await database.ref('bookings/' + booking.id).set(booking);
+                
+                if (status === 'approved') {
+                    showSuccess('Booking Approved!', `Booking ${booking.bookingId} has been approved. Guest will be notified.`);
+                    setTimeout(hideSuccess, 3000);
+                    showNotification(`Notification sent to ${booking.guestName}`);
+                }
+                
+                displayOwnerBookings();
+                updateOwnerStats();
+            }
+        }
+        
+        // Update Owner Stats
+        function updateOwnerStats() {
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!ownerGH) return;
+            
+            const ownerBookings = bookings.filter(b => b.guestHouseId === ownerGH.id);
+            const ownerRooms = rooms.filter(r => r.guestHouseId === ownerGH.id);
+            
+            document.getElementById('totalBookings').textContent = ownerBookings.length;
+            document.getElementById('pendingBookings').textContent = ownerBookings.filter(b => b.status === 'pending').length;
+            document.getElementById('totalRooms').textContent = ownerRooms.length;
+            
+            const currentMonth = new Date().getMonth();
+            const monthlyRevenue = ownerBookings
+                .filter(b => new Date(b.createdAt).getMonth() === currentMonth && 
+                       (b.status === 'approved' || b.status === 'checked-in' || b.status === 'checked-out'))
+                .reduce((sum, b) => sum + b.total, 0);
+            document.getElementById('monthlyRevenue').textContent = monthlyRevenue + ' MVR';
+        }
+        
+        // Display Guests
+        function displayGuests() {
+            const tbody = document.getElementById('guestsTable');
+            tbody.innerHTML = '';
+            
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!ownerGH) return;
+            
+            const ownerBookings = bookings.filter(b => b.guestHouseId === ownerGH.id);
+            const guestEmails = [...new Set(ownerBookings.map(b => b.guestEmail))];
+            
+            const guests = guestEmails.map(email => {
+                const guestBookings = ownerBookings.filter(b => b.guestEmail === email);
+                const lastBooking = guestBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+                
+                return {
+                    email: email,
+                    name: lastBooking.guestName,
+                    phone: lastBooking.guestPhone,
+                    bookings: guestBookings.length,
+                    lastBooking: lastBooking.createdAt
+                };
+            });
+            
+            if (guests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No guests yet</td></tr>';
+                return;
+            }
+            
+            guests.forEach(guest => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${guest.name}</td>
+                    <td>${guest.phone}<br><small>${guest.email}</small></td>
+                    <td>${guest.bookings}</td>
+                    <td>${new Date(guest.lastBooking).toLocaleDateString()}</td>
+                    <td>
+                        <button class="action-btn view-btn" onclick="viewGuestBookings('${guest.email}')">
+                            View Bookings
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // View Guest Bookings
+        function viewGuestBookings(email) {
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!ownerGH) return;
+            
+            const guestBookings = bookings.filter(b => b.guestHouseId === ownerGH.id && b.guestEmail === email);
+            
+            let html = '<h4 style="margin-bottom: 15px;">Guest Bookings</h4>';
+            guestBookings.forEach(booking => {
+                html += `
+                    <div style="background: #f5f5f5; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                        <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
+                        <p><strong>Rooms:</strong> ${booking.bookedRooms.length}</p>
+                        <p><strong>Dates:</strong> ${booking.checkIn} to ${booking.checkOut}</p>
+                        <p><strong>Total:</strong> ${booking.total} MVR</p>
+                        <p><strong>Status:</strong> <span class="status-badge status-${booking.status}">${booking.status}</span></p>
+                    </div>
+                `;
+            });
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>Guest: ${guestBookings[0].guestName}</h3>
+                    </div>
+                    ${html}
+                    <div class="modal-footer">
+                        <button class="modal-btn cancel" onclick="this.closest('.modal-overlay').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+        
+        // Load Guest House Info
+        function loadGuestHouseInfo() {
+            const gh = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!gh) return;
+            
+            const info = document.getElementById('guestHouseInfo');
+            
+            let imageHtml = '';
+            if (gh.images && gh.images.length > 0) {
+                imageHtml = `
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                        ${gh.images.map(img => `
+                            <img src="${img}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer;" onclick="showPaymentSlip('${img}')">
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            info.innerHTML = `
+                <h4 style="color: #0066cc; margin-bottom: 10px;">${gh.name}</h4>
+                <p><i class="fas fa-map-marker-alt"></i> ${gh.island}, Maldives</p>
+                <p><i class="fas fa-phone"></i> ${gh.contact || 'Not set'}</p>
+                <p><i class="fas fa-envelope"></i> ${gh.email || 'Not set'}</p>
+                
+                <h4 style="margin: 15px 0 10px;">Bank Details</h4>
+                <p><strong>Bank:</strong> ${gh.bankName || 'Not set'}</p>
+                <p><strong>Account:</strong> ${gh.accountNumber || 'Not set'}</p>
+                <p><strong>Holder:</strong> ${gh.accountHolder || 'Not set'}</p>
+                <p><strong>Branch:</strong> ${gh.bankBranch || 'Not set'}</p>
+                
+                <h4 style="margin: 15px 0 10px;">Facilities</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    ${(gh.facilities || []).map(f => `
+                        <span class="facility-tag"><i class="fas fa-check"></i> ${f}</span>
+                    `).join('')}
+                </div>
+                
+                <h4 style="margin: 15px 0 10px;">Images</h4>
+                ${imageHtml || '<p>No images uploaded</p>'}
+            `;
+        }
+        
+        // Open GH Settings
+        function openGHSettings() {
+            const gh = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!gh) return;
+            
+            document.getElementById('editGHName').value = gh.name || '';
+            document.getElementById('editGHDescription').value = gh.description || '';
+            document.getElementById('editGHIsland').value = gh.island || '';
+            document.getElementById('editGHAddress').value = gh.address || '';
+            document.getElementById('editGHContact').value = gh.contact || '';
+            document.getElementById('editGHEmail').value = gh.email || '';
+            document.getElementById('editGHBankName').value = gh.bankName || '';
+            document.getElementById('editGHAccountHolder').value = gh.accountHolder || '';
+            document.getElementById('editGHAccountNumber').value = gh.accountNumber || '';
+            document.getElementById('editGHBranch').value = gh.bankBranch || '';
+            
+            document.querySelectorAll('#ghSettingsModal input[type="checkbox"]').forEach(cb => {
+                cb.checked = gh.facilities?.includes(cb.value) || false;
+            });
+            
+            // Show existing images
+            const preview = document.getElementById('ghImagePreview');
+            preview.innerHTML = '';
+            if (gh.images) {
+                gh.images.forEach(img => {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.innerHTML = `<img src="${img}">`;
+                    preview.appendChild(div);
+                });
+            }
+            
+            document.getElementById('ghSettingsModal').classList.add('active');
+        }
+        
+        // Save GH Settings
+        document.getElementById('saveGHSettings')?.addEventListener('click', async () => {
+            const gh = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!gh) return;
+            
+            const facilities = [];
+            document.querySelectorAll('#ghSettingsModal input[type="checkbox"]:checked').forEach(cb => {
+                facilities.push(cb.value);
+            });
+            
+            // Get new images from preview (excluding existing ones)
+            const newImages = [];
+            document.querySelectorAll('#ghImagePreview .preview-item img').forEach(img => {
+                newImages.push(img.src);
+            });
+            
+            gh.name = document.getElementById('editGHName').value;
+            gh.description = document.getElementById('editGHDescription').value;
+            gh.island = document.getElementById('editGHIsland').value;
+            gh.address = document.getElementById('editGHAddress').value;
+            gh.contact = document.getElementById('editGHContact').value;
+            gh.email = document.getElementById('editGHEmail').value;
+            gh.bankName = document.getElementById('editGHBankName').value;
+            gh.accountHolder = document.getElementById('editGHAccountHolder').value;
+            gh.accountNumber = document.getElementById('editGHAccountNumber').value;
+            gh.bankBranch = document.getElementById('editGHBranch').value;
+            gh.facilities = facilities;
+            gh.images = newImages;
+            
+            await database.ref('guestHouses/' + gh.id).set(gh);
+            
+            closeGHSettings();
+            loadGuestHouseInfo();
+            showNotification('Guest house updated');
+        });
+        
+        // Close GH Settings
+        function closeGHSettings() {
+            document.getElementById('ghSettingsModal').classList.remove('active');
+        }
+        
+        // GH Image Upload
+        const ghImageUpload = document.getElementById('ghImageUpload');
+        const ghImagesInput = document.getElementById('ghImages');
+        
+        ghImageUpload?.addEventListener('click', () => ghImagesInput.click());
+        
+        ghImageUpload?.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            ghImageUpload.style.borderColor = '#00a8cc';
+        });
+        
+        ghImageUpload?.addEventListener('dragleave', () => {
+            ghImageUpload.style.borderColor = '#ddd';
+        });
+        
+        ghImageUpload?.addEventListener('drop', (e) => {
+            e.preventDefault();
+            ghImageUpload.style.borderColor = '#ddd';
+            handleGHImages(e.dataTransfer.files);
+        });
+        
+        ghImagesInput?.addEventListener('change', () => {
+            handleGHImages(ghImagesInput.files);
+        });
+        
+        function handleGHImages(files) {
+            const preview = document.getElementById('ghImagePreview');
+            
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const div = document.createElement('div');
+                        div.className = 'preview-item';
+                        div.innerHTML = `<img src="${e.target.result}">`;
+                        preview.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        // Sidebar Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+        
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+        
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            dashboardPage.style.display = 'none';
+            loginPage.style.display = 'block';
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        });
+        
+        // Success Message Functions
+        function showSuccess(title, message) {
+            document.getElementById('successTitle').textContent = title;
+            document.getElementById('successText').textContent = message;
+            document.getElementById('successMessage').classList.add('show');
+        }
+        
+        function hideSuccess() {
+            document.getElementById('successMessage').classList.remove('show');
+        }
+        
+        // Notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-info-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Initialize
+        initApp();
+    </script>
+    <script>
+        // Update Room Selection
+function updateRoomSelection(roomId, quantity) {
+    quantity = parseInt(quantity) || 0;
+    
+    // Get fresh room data from the rooms array
+    const room = rooms.find(r => r.id == roomId);
+    if (!room) {
+        console.error('Room not found:', roomId);
+        return;
+    }
+    
+    const existingIndex = selectedRooms.findIndex(r => r.roomId == roomId);
+    
+    if (quantity > 0) {
+        if (existingIndex >= 0) {
+            selectedRooms[existingIndex].quantity = quantity;
+            selectedRooms[existingIndex].pricePerNight = room.price; // Ensure price is updated
+        } else {
+            selectedRooms.push({
+                roomId: roomId,
+                room: room,
+                quantity: quantity,
+                pricePerNight: room.price
+            });
+        }
+    } else {
+        if (existingIndex >= 0) {
+            selectedRooms.splice(existingIndex, 1);
+        }
+    }
+    
+    displaySelectedRooms();
+    updateBookingSummary();
+}
+    </script>
+    <script>
+        // Load Available Rooms
+function loadAvailableRooms() {
+    const container = document.getElementById('availableRoomsList');
+    if (!currentBookingGH) return;
+    
+    const ghRooms = rooms.filter(r => r.guestHouseId == currentBookingGH.id);
+    
+    if (ghRooms.length === 0) {
+        container.innerHTML = '<p style="text-align: center; padding: 20px;">No rooms available</p>';
+        return;
+    }
+    
+    container.innerHTML = '';
+    ghRooms.forEach(room => {
+        const isAvailable = checkRoomAvailability(room);
+        if (!isAvailable) return;
+        
+        const roomImage = room.images && room.images.length > 0 ? room.images[0] : 'https://via.placeholder.com/300x200?text=Room';
+        
+        const card = document.createElement('div');
+        card.className = 'room-card';
+        card.onclick = () => showRoomDetails(room.id);
+        
+        card.innerHTML = `
+            <div class="room-image" style="background-image: url('${roomImage}')">
+                <div class="room-status available">Available</div>
+                ${room.images && room.images.length > 1 ? `
+                    <div class="room-image-gallery">
+                        <i class="fas fa-images"></i> ${room.images.length}
+                    </div>
+                ` : ''}
+            </div>
+            <div class="room-info">
+                <div class="room-type">${room.type} ${room.number ? `- ${room.number}` : ''}</div>
+                <div class="room-capacity">
+                    <i class="fas fa-users"></i> Max ${room.capacity} guests
+                </div>
+                <div class="room-price">${room.price} MVR / night</div>
+                <div class="room-selector">
+                    <span>Quantity:</span>
+                    <input type="number" min="0" max="3" value="0" 
+                           onchange="updateRoomSelection(${room.id}, this.value)" 
+                           onclick="event.stopPropagation()">
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    });
+}
+    </script>
+    <script>
+        // Load Available Rooms
+function loadAvailableRooms() {
+    const container = document.getElementById('availableRoomsList');
+    if (!currentBookingGH) return;
+    
+    const ghRooms = rooms.filter(r => r.guestHouseId == currentBookingGH.id);
+    
+    if (ghRooms.length === 0) {
+        container.innerHTML = '<p style="text-align: center; padding: 20px;">No rooms available</p>';
+        return;
+    }
+    
+    container.innerHTML = '';
+    ghRooms.forEach(room => {
+        const isAvailable = checkRoomAvailability(room);
+        if (!isAvailable) return;
+        
+        const roomImage = room.images && room.images.length > 0 ? room.images[0] : 'https://via.placeholder.com/300x200?text=Room';
+        
+        const card = document.createElement('div');
+        card.className = 'room-card';
+        card.onclick = () => showRoomDetails(room.id);
+        
+        card.innerHTML = `
+            <div class="room-image" style="background-image: url('${roomImage}')">
+                <div class="room-status available">Available</div>
+                ${room.images && room.images.length > 1 ? `
+                    <div class="room-image-gallery">
+                        <i class="fas fa-images"></i> ${room.images.length}
+                    </div>
+                ` : ''}
+            </div>
+            <div class="room-info">
+                <div class="room-type">${room.type} ${room.number ? `- ${room.number}` : ''}</div>
+                <div class="room-capacity">
+                    <i class="fas fa-users"></i> Max ${room.capacity} guests
+                </div>
+                <div class="room-price">${room.price} MVR / night</div>
+                <div class="room-selector">
+                    <span>Quantity:</span>
+                    <input type="number" min="0" max="3" value="0" 
+                           onchange="updateRoomSelection(${room.id}, this.value)" 
+                           onclick="event.stopPropagation()">
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    });
+}
+    </script>
+</body>
+</html>
