@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Maldives Guest House Hub - Complete Booking System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    <!-- Firebase SDK 9.22.2 compat (modern but compatible) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
     
     <style>
         * {
@@ -190,24 +188,6 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff4444;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
         }
 
         /* Sidebar */
@@ -661,23 +641,6 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             text-align: center;
-        }
-
-        /* Date Filter */
-        .date-filter {
-            background: white;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .date-filter input {
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
         }
 
         /* Booking Summary */
@@ -1164,149 +1127,8 @@
             cursor: not-allowed;
         }
 
-        /* Notifications Panel */
-        .notifications-panel {
-            position: fixed;
-            top: 70px;
-            right: 15px;
-            left: 15px;
-            max-width: 400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            z-index: 2000;
-            max-height: 80vh;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .notifications-panel.active {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        .notifications-header {
-            padding: 15px;
-            background: linear-gradient(135deg, #0066cc, #00a8cc);
-            color: white;
-            border-radius: 15px 15px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .notifications-header h3 {
-            font-size: 16px;
-        }
-
-        .notifications-list {
-            padding: 15px;
-        }
-
-        .notification-item {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .notification-item:hover {
-            background: #f5f5f5;
-        }
-
-        .notification-item.unread {
-            background: #e6f7ff;
-        }
-
-        .notification-item:last-child {
-            border-bottom: none;
-        }
-
-        .notification-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .notification-time {
-            font-size: 11px;
-            color: #999;
-        }
-
-        .mark-read {
-            color: #0066cc;
-            font-size: 12px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        /* Map */
-        #map {
-            height: 300px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .location-info {
-            background: white;
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .location-info i {
-            color: #0066cc;
-            margin-right: 5px;
-        }
-
-        /* Image Gallery */
-        .image-gallery {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .gallery-image {
-            width: 150px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .fullscreen-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-            padding: 20px;
-        }
-
-        .fullscreen-image img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 10px;
-        }
-
-        .close-fullscreen {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-        }
-
-        /* Notification Toast */
-        .notification-toast {
+        /* Notification */
+        .notification {
             position: fixed;
             top: 80px;
             right: 20px;
@@ -1388,7 +1210,7 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .notification-toast {
+            .notification {
                 left: auto;
                 right: 20px;
                 min-width: 300px;
@@ -1417,7 +1239,7 @@
         
         <div class="login-form">
             <!-- Login Form -->
-            <div id="loginForm">
+            <div id="loginFormDiv">
                 <div class="role-buttons">
                     <button class="role-btn active" data-role="guest">Guest</button>
                     <button class="role-btn" data-role="owner">Owner</button>
@@ -1443,7 +1265,7 @@
             </div>
             
             <!-- Register Form -->
-            <div id="registerForm" style="display: none;">
+            <div id="registerFormDiv" style="display: none;">
                 <div class="role-buttons">
                     <button class="role-btn active" data-role="guest">Guest</button>
                     <button class="role-btn" data-role="owner">Owner</button>
@@ -1493,28 +1315,6 @@
                             <option value="Rasdhoo">Rasdhoo</option>
                         </select>
                     </div>
-                    
-                    <div class="form-group">
-                        <label>Location (Click on map to set)</label>
-                        <div id="registerMap" style="height: 200px; border-radius: 10px; margin-bottom: 10px;"></div>
-                        <input type="hidden" id="regLat">
-                        <input type="hidden" id="regLng">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Bank Name</label>
-                        <input type="text" id="regBankName" placeholder="e.g., Bank of Maldives">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Account Holder Name</label>
-                        <input type="text" id="regAccountHolder" placeholder="Name on account">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Account Number</label>
-                        <input type="text" id="regAccountNumber" placeholder="Account number">
-                    </div>
                 </div>
                 
                 <button class="login-submit" id="registerBtn">
@@ -1538,21 +1338,6 @@
             <div class="logo">Maldives GH Hub</div>
             <div class="user-avatar" id="userAvatar">
                 <i class="fas fa-user"></i>
-                <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-            </div>
-        </div>
-
-        <!-- Notifications Panel -->
-        <div class="notifications-panel" id="notificationsPanel">
-            <div class="notifications-header">
-                <h3><i class="fas fa-bell"></i> Notifications</h3>
-                <span id="markAllRead" style="font-size: 12px; cursor: pointer;">Mark all read</span>
-            </div>
-            <div class="notifications-list" id="notificationsList">
-                <div class="empty-state">
-                    <i class="fas fa-bell-slash"></i>
-                    <p>No notifications</p>
-                </div>
             </div>
         </div>
 
@@ -1591,18 +1376,14 @@
                         <i class="fas fa-search"></i>
                         <input type="text" id="searchInput" placeholder="Search by name or island...">
                     </div>
-                    <div class="filter-buttons" id="filterButtons">
-                        <button class="filter-btn active" data-filter="all">All Islands</button>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="Male">Male'</button>
+                        <button class="filter-btn" data-filter="Hulhumale">Hulhumale'</button>
+                        <button class="filter-btn" data-filter="Maafushi">Maafushi</button>
+                        <button class="filter-btn" data-filter="favorites">⭐ Favorites</button>
                     </div>
                 </div>
-                
-                <div class="date-filter">
-                    <input type="date" id="filterCheckIn" placeholder="Check-in">
-                    <input type="date" id="filterCheckOut" placeholder="Check-out">
-                    <button class="login-submit" onclick="applyDateFilter()" style="grid-column: span 2;">Check Availability</button>
-                </div>
-                
-                <div id="map" style="height: 300px; border-radius: 15px; margin-bottom: 20px;"></div>
                 
                 <div id="guestHousesList" class="guesthouse-grid">
                     <!-- Guest houses will be loaded here -->
@@ -1673,7 +1454,7 @@
                     </div>
                     <div class="stat-card">
                         <h3>Revenue</h3>
-                        <div class="stat-number" id="monthlyRevenue">0 MVR</div>
+                        <div class="stat-number" id="monthlyRevenue">0</div>
                     </div>
                 </div>
                 
@@ -1806,7 +1587,7 @@
             
             <div class="form-group">
                 <label>Price per Night (MVR)</label>
-                <input type="number" id="roomPrice" min="0" step="100" required>
+                <input type="number" id="roomPrice" min="0" step="100">
             </div>
             
             <div class="form-group">
@@ -1841,16 +1622,16 @@
             <div class="form-group">
                 <label>Set Unavailable Dates</label>
                 <div style="display: flex; gap: 5px; margin-bottom: 10px;">
-                    <input type="date" id="unavailableFrom" style="flex: 1;">
-                    <input type="date" id="unavailableTo" style="flex: 1;">
-                    <button class="action-btn view-btn" type="button" onclick="addUnavailableRange()">Add</button>
+                    <input type="date" id="unavailableFrom" style="flex: 1;" min="">
+                    <input type="date" id="unavailableTo" style="flex: 1;" min="">
+                    <button class="action-btn view-btn" onclick="addUnavailableRange()">Add</button>
                 </div>
                 <div id="unavailableDatesList"></div>
             </div>
             
             <div class="modal-footer">
-                <button class="modal-btn cancel" type="button" onclick="closeRoomModal()">Cancel</button>
-                <button class="modal-btn confirm" type="button" id="saveRoomBtn">Save Room</button>
+                <button class="modal-btn cancel" onclick="closeRoomModal()">Cancel</button>
+                <button class="modal-btn confirm" id="saveRoomBtn">Save Room</button>
             </div>
         </div>
     </div>
@@ -1899,13 +1680,6 @@
                 <input type="email" id="editGHEmail">
             </div>
             
-            <div class="form-group">
-                <label>Location (Click on map to set)</label>
-                <div id="editMap" style="height: 200px; border-radius: 10px; margin-bottom: 10px;"></div>
-                <input type="hidden" id="editLat">
-                <input type="hidden" id="editLng">
-            </div>
-            
             <h4 style="margin: 15px 0 10px; color: #0066cc;">Bank Details</h4>
             
             <div class="form-group">
@@ -1951,44 +1725,8 @@
             </div>
             
             <div class="modal-footer">
-                <button class="modal-btn cancel" type="button" onclick="closeGHSettings()">Cancel</button>
-                <button class="modal-btn confirm" type="button" id="saveGHSettings">Save Changes</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Guest House Details Modal -->
-    <div class="modal-overlay" id="ghDetailsModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 id="ghDetailsName">Guest House Name</h3>
-            </div>
-            
-            <div id="ghDetailsContent">
-                <!-- Content will be loaded dynamically -->
-            </div>
-            
-            <div class="modal-footer">
-                <button class="modal-btn cancel" onclick="closeGHDetails()">Close</button>
-                <button class="modal-btn confirm" id="bookFromDetailsBtn">Book Now</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Room Details Modal -->
-    <div class="modal-overlay" id="roomDetailsModal">
-        <div class="modal" style="max-width: 600px;">
-            <div class="modal-header">
-                <h3 id="roomDetailsTitle">Room Details</h3>
-            </div>
-            
-            <div id="roomDetailsContent">
-                <!-- Room details will be loaded here -->
-            </div>
-            
-            <div class="modal-footer">
-                <button class="modal-btn cancel" onclick="closeRoomDetailsModal()">Close</button>
-                <button class="modal-btn confirm" id="addToBookingBtn">Add to Booking</button>
+                <button class="modal-btn cancel" onclick="closeGHSettings()">Cancel</button>
+                <button class="modal-btn confirm" id="saveGHSettings">Save Changes</button>
             </div>
         </div>
     </div>
@@ -2005,25 +1743,25 @@
                 <div class="counter-row">
                     <span>Adults (12+ years)</span>
                     <div class="counter-controls">
-                        <button class="counter-btn" type="button" onclick="updateGuestCount('adults', -1)">-</button>
+                        <button class="counter-btn" onclick="updateGuestCount('adults', -1)">-</button>
                         <span class="counter-value" id="adultsCount">2</span>
-                        <button class="counter-btn" type="button" onclick="updateGuestCount('adults', 1)">+</button>
+                        <button class="counter-btn" onclick="updateGuestCount('adults', 1)">+</button>
                     </div>
                 </div>
                 <div class="counter-row">
                     <span>Children (2-11 years)</span>
                     <div class="counter-controls">
-                        <button class="counter-btn" type="button" onclick="updateGuestCount('children', -1)">-</button>
+                        <button class="counter-btn" onclick="updateGuestCount('children', -1)">-</button>
                         <span class="counter-value" id="childrenCount">0</span>
-                        <button class="counter-btn" type="button" onclick="updateGuestCount('children', 1)">+</button>
+                        <button class="counter-btn" onclick="updateGuestCount('children', 1)">+</button>
                     </div>
                 </div>
                 <div class="counter-row">
                     <span>Infants (under 2 years)</span>
                     <div class="counter-controls">
-                        <button class="counter-btn" type="button" onclick="updateGuestCount('infants', -1)">-</button>
+                        <button class="counter-btn" onclick="updateGuestCount('infants', -1)">-</button>
                         <span class="counter-value" id="infantsCount">0</span>
-                        <button class="counter-btn" type="button" onclick="updateGuestCount('infants', 1)">+</button>
+                        <button class="counter-btn" onclick="updateGuestCount('infants', 1)">+</button>
                     </div>
                 </div>
             </div>
@@ -2081,7 +1819,7 @@
                 <div class="bank-row">
                     <span>Account:</span>
                     <strong id="accountNumber">Loading...</strong>
-                    <button class="copy-btn" type="button" onclick="copyAccountNumber()">Copy</button>
+                    <button class="copy-btn" onclick="copyAccountNumber()">Copy</button>
                 </div>
                 <div class="bank-row">
                     <span>Holder:</span>
@@ -2120,8 +1858,26 @@
             </div>
             
             <div class="modal-footer">
-                <button class="modal-btn cancel" type="button" onclick="closeBookingModal()">Cancel</button>
-                <button class="modal-btn confirm" type="button" id="submitBookingBtn" onclick="submitBooking()">Submit Booking</button>
+                <button class="modal-btn cancel" onclick="closeBookingModal()">Cancel</button>
+                <button class="modal-btn confirm" id="submitBookingBtn" onclick="submitBooking()">Submit Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Details Modal -->
+    <div class="modal-overlay" id="roomDetailsModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="roomDetailsTitle">Room Details</h3>
+            </div>
+            
+            <div id="roomDetailsContent">
+                <!-- Room details will be loaded here -->
+            </div>
+            
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeRoomDetailsModal()">Close</button>
+                <button class="modal-btn confirm" id="addToBookingBtn">Add to Booking</button>
             </div>
         </div>
     </div>
@@ -2141,12 +1897,6 @@
         </div>
     </div>
 
-    <!-- Fullscreen Image Modal -->
-    <div class="fullscreen-image" id="fullscreenImage" style="display: none;">
-        <span class="close-fullscreen" onclick="closeFullscreenImage()">×</span>
-        <img id="fullscreenImg" src="">
-    </div>
-
     <!-- Success Message -->
     <div class="success-message" id="successMessage">
         <i class="fas fa-check-circle"></i>
@@ -2156,7 +1906,7 @@
     </div>
 
     <script>
-        // Firebase Configuration
+        // ========================== FIREBASE & GLOBALS ==========================
         const firebaseConfig = {
             apiKey: "AIzaSyCZA8Z9AJcC97CyQUZVCRsljTuYBfxjHMw",
             authDomain: "easycargo-9c0cd.firebaseapp.com",
@@ -2167,27 +1917,18 @@
             appId: "1:51689325187:web:c65cb8fb0af2241a4c91b6"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const storage = firebase.storage();
 
-        // Global Variables
         let currentUser = null;
         let users = [];
         let guestHouses = [];
         let rooms = [];
         let bookings = [];
-        let notifications = [];
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         
-        // Maps
-        let mainMap = null;
-        let registerMap = null;
-        let editMap = null;
-        let mapMarkers = [];
-        
-        // Current editing variables
+        // Current editing / booking state
         let currentRoomId = null;
         let currentRoomImages = [];
         let unavailableRanges = [];
@@ -2201,13 +1942,7 @@
             infants: 0
         };
 
-        // Filter variables
-        let currentFilter = 'all';
-        let searchTerm = '';
-        let filterCheckIn = '';
-        let filterCheckOut = '';
-
-        // Initialize
+        // ========================== INIT ==========================
         function initApp() {
             loadData();
             
@@ -2215,51 +1950,38 @@
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 showDashboard();
-                loadNotifications();
             }
         }
 
-        // Load Data from Firebase
         function loadData() {
-            // Load users
             database.ref('users').on('value', (snapshot) => {
                 const data = snapshot.val();
                 users = data ? Object.values(data) : [];
             });
             
-            // Load guest houses
             database.ref('guestHouses').on('value', (snapshot) => {
                 const data = snapshot.val();
                 guestHouses = data ? Object.values(data) : [];
-                console.log('Guest houses loaded:', guestHouses);
                 
                 if (currentUser) {
                     if (currentUser.role === 'guest') {
                         displayGuestHouses();
                         displayFavorites();
-                        initMap();
                     } else {
                         loadGuestHouseInfo();
                     }
                 }
             });
             
-            // Load rooms
             database.ref('rooms').on('value', (snapshot) => {
                 const data = snapshot.val();
                 rooms = data ? Object.values(data) : [];
-                console.log('Rooms loaded:', rooms);
                 
-                if (currentUser) {
-                    if (currentUser.role === 'guest') {
-                        displayGuestHouses(); // Refresh to show updated room prices
-                    } else if (currentUser.role === 'owner') {
-                        displayOwnerRooms();
-                    }
+                if (currentUser && currentUser.role === 'owner') {
+                    displayOwnerRooms();
                 }
             });
             
-            // Load bookings
             database.ref('bookings').on('value', (snapshot) => {
                 const data = snapshot.val();
                 bookings = data ? Object.values(data) : [];
@@ -2274,262 +1996,49 @@
                     }
                 }
             });
-            
-            // Load notifications
-            database.ref('notifications').on('value', (snapshot) => {
-                const data = snapshot.val();
-                notifications = data ? Object.values(data) : [];
-                updateNotificationBadge();
-                if (currentUser) {
-                    loadNotifications();
-                }
-            });
         }
 
-        // Load user notifications
-        function loadNotifications() {
-            if (!currentUser) return;
-            
-            const userNotifications = notifications.filter(n => n.userId == currentUser.id);
-            displayNotifications(userNotifications);
-        }
-
-        // Display notifications
-        function displayNotifications(notifs) {
-            const list = document.getElementById('notificationsList');
-            if (!notifs || notifs.length === 0) {
-                list.innerHTML = '<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No notifications</p></div>';
-                return;
-            }
-            
-            notifs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            
-            list.innerHTML = notifs.map(n => `
-                <div class="notification-item ${n.read ? '' : 'unread'}" onclick="markNotificationRead('${n.id}')">
-                    <div class="notification-title">${n.title}</div>
-                    <div class="notification-message" style="font-size: 13px; color: #666;">${n.message}</div>
-                    <div class="notification-time">${timeAgo(new Date(n.timestamp))}</div>
-                </div>
-            `).join('');
-        }
-
-        // Update notification badge
-        function updateNotificationBadge() {
-            if (!currentUser) return;
-            
-            const unread = notifications.filter(n => n.userId == currentUser.id && !n.read).length;
-            const badge = document.getElementById('notificationBadge');
-            
-            if (unread > 0) {
-                badge.style.display = 'flex';
-                badge.textContent = unread;
-            } else {
-                badge.style.display = 'none';
-            }
-        }
-
-        // Mark notification as read
-        async function markNotificationRead(notificationId) {
-            const notification = notifications.find(n => n.id == notificationId);
-            if (notification && !notification.read) {
-                notification.read = true;
-                await database.ref('notifications/' + notification.id).set(notification);
-                loadNotifications();
-                updateNotificationBadge();
-            }
-        }
-
-        // Create notification
-        async function createNotification(userId, title, message) {
-            const notification = {
-                id: Date.now() + Math.random(),
-                userId: userId,
-                title: title,
-                message: message,
-                read: false,
-                timestamp: new Date().toISOString()
-            };
-            
-            await database.ref('notifications/' + notification.id).set(notification);
-        }
-
-        // Time ago function
-        function timeAgo(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-            
-            let interval = seconds / 31536000;
-            if (interval > 1) return Math.floor(interval) + ' years ago';
-            
-            interval = seconds / 2592000;
-            if (interval > 1) return Math.floor(interval) + ' months ago';
-            
-            interval = seconds / 86400;
-            if (interval > 1) return Math.floor(interval) + ' days ago';
-            
-            interval = seconds / 3600;
-            if (interval > 1) return Math.floor(interval) + ' hours ago';
-            
-            interval = seconds / 60;
-            if (interval > 1) return Math.floor(interval) + ' minutes ago';
-            
-            return Math.floor(seconds) + ' seconds ago';
-        }
-
-        // Initialize main map
-        function initMap() {
-            if (mainMap) {
-                mainMap.remove();
-            }
-            
-            // Default center on Maldives
-            const maldivesCenter = [4.1755, 73.5093];
-            
-            mainMap = L.map('map').setView(maldivesCenter, 10);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(mainMap);
-            
-            // Clear existing markers
-            mapMarkers.forEach(marker => marker.remove());
-            mapMarkers = [];
-            
-            // Add markers for guest houses
-            guestHouses.forEach(gh => {
-                if (gh.lat && gh.lng) {
-                    const marker = L.marker([gh.lat, gh.lng]).addTo(mainMap);
-                    
-                    // Calculate available rooms and min price
-                    const ghRooms = rooms.filter(r => r.guestHouseId == gh.id);
-                    const availableRooms = ghRooms.filter(r => checkRoomAvailability(r)).length;
-                    const minPrice = ghRooms.length > 0 ? Math.min(...ghRooms.map(r => r.price)) : 0;
-                    
-                    marker.bindPopup(`
-                        <b>${gh.name}</b><br>
-                        ${gh.island}, Maldives<br>
-                        <span style="color: #0066cc;">From ${minPrice} MVR/night</span><br>
-                        <span style="color: ${availableRooms > 0 ? '#4caf50' : '#f44336'};">
-                            ${availableRooms} rooms available
-                        </span><br>
-                        <button onclick="openGHDetails(${gh.id})" style="padding: 5px 10px; margin-top: 5px; background: #0066cc; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                            View Details
-                        </button>
-                    `);
-                    
-                    mapMarkers.push(marker);
-                }
-            });
-        }
-
-        // Initialize register map
-        function initRegisterMap() {
-            if (registerMap) {
-                registerMap.remove();
-            }
-            
-            registerMap = L.map('registerMap').setView([4.1755, 73.5093], 10);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(registerMap);
-            
-            let marker = null;
-            
-            registerMap.on('click', (e) => {
-                if (marker) {
-                    marker.remove();
-                }
-                
-                marker = L.marker(e.latlng).addTo(registerMap);
-                
-                document.getElementById('regLat').value = e.latlng.lat;
-                document.getElementById('regLng').value = e.latlng.lng;
-            });
-        }
-
-        // Initialize edit map
-        function initEditMap(lat, lng) {
-            if (editMap) {
-                editMap.remove();
-            }
-            
-            const center = lat && lng ? [lat, lng] : [4.1755, 73.5093];
-            
-            editMap = L.map('editMap').setView(center, 15);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(editMap);
-            
-            let marker = null;
-            
-            if (lat && lng) {
-                marker = L.marker([lat, lng]).addTo(editMap);
-                document.getElementById('editLat').value = lat;
-                document.getElementById('editLng').value = lng;
-            }
-            
-            editMap.on('click', (e) => {
-                if (marker) {
-                    marker.remove();
-                }
-                
-                marker = L.marker(e.latlng).addTo(editMap);
-                
-                document.getElementById('editLat').value = e.latlng.lat;
-                document.getElementById('editLng').value = e.latlng.lng;
-            });
-        }
-
-        // Login/Register Elements
+        // ========================== LOGIN / REGISTER UI ==========================
         const loginPage = document.getElementById('loginPage');
         const dashboardPage = document.getElementById('dashboardPage');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const showRegister = document.getElementById('showRegister');
-        const showLogin = document.getElementById('showLogin');
+        const loginFormDiv = document.getElementById('loginFormDiv');
+        const registerFormDiv = document.getElementById('registerFormDiv');
+        const showRegisterLink = document.getElementById('showRegister');
+        const showLoginLink = document.getElementById('showLogin');
         const loginBtn = document.getElementById('loginBtn');
         const registerBtn = document.getElementById('registerBtn');
         
-        // Role buttons
         const roleBtns = document.querySelectorAll('.role-btn');
         const ownerFields = document.getElementById('ownerFields');
-        
-        // Toggle Forms
-        showRegister.addEventListener('click', (e) => {
+
+        showRegisterLink.addEventListener('click', (e) => {
             e.preventDefault();
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'block';
-            setTimeout(initRegisterMap, 100);
+            loginFormDiv.style.display = 'none';
+            registerFormDiv.style.display = 'block';
         });
         
-        showLogin.addEventListener('click', (e) => {
+        showLoginLink.addEventListener('click', (e) => {
             e.preventDefault();
-            registerForm.style.display = 'none';
-            loginForm.style.display = 'block';
+            registerFormDiv.style.display = 'none';
+            loginFormDiv.style.display = 'block';
         });
-        
-        // Role Selection
+
         roleBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 const parent = this.parentElement;
                 parent.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 
-                if (parent.parentElement.id === 'registerForm') {
+                if (parent.parentElement.id === 'registerFormDiv') {
                     ownerFields.style.display = this.dataset.role === 'owner' ? 'block' : 'none';
-                    if (this.dataset.role === 'owner') {
-                        setTimeout(initRegisterMap, 100);
-                    }
                 }
             });
         });
-        
-        // Login
+
         loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            const role = document.querySelector('#loginForm .role-btn.active').dataset.role;
+            const role = document.querySelector('#loginFormDiv .role-btn.active').dataset.role;
             
             if (!email || !password) {
                 showNotification('Please enter email and password');
@@ -2550,18 +2059,16 @@
             setTimeout(() => {
                 hideSuccess();
                 showDashboard();
-                loadNotifications();
-            }, 2000);
+            }, 1500);
         });
-        
-        // Register
+
         registerBtn.addEventListener('click', async () => {
             const name = document.getElementById('regName').value;
             const email = document.getElementById('regEmail').value;
             const phone = document.getElementById('regPhone').value;
             const password = document.getElementById('regPassword').value;
             const confirmPassword = document.getElementById('regConfirmPassword').value;
-            const role = document.querySelector('#registerForm .role-btn.active').dataset.role;
+            const role = document.querySelector('#registerFormDiv .role-btn.active').dataset.role;
             
             if (!name || !email || !phone || !password) {
                 showNotification('Please fill all fields');
@@ -2592,14 +2099,9 @@
             if (role === 'owner') {
                 const ghName = document.getElementById('regGuestHouseName').value;
                 const island = document.getElementById('regIsland').value;
-                const lat = parseFloat(document.getElementById('regLat').value);
-                const lng = parseFloat(document.getElementById('regLng').value);
-                const bankName = document.getElementById('regBankName').value;
-                const accountHolder = document.getElementById('regAccountHolder').value;
-                const accountNumber = document.getElementById('regAccountNumber').value;
                 
-                if (!ghName || !island || !lat || !lng) {
-                    showNotification('Please fill all guest house details and set location on map');
+                if (!ghName || !island) {
+                    showNotification('Please fill guest house details');
                     return;
                 }
                 
@@ -2614,12 +2116,10 @@
                     email: email,
                     facilities: ['WiFi', 'Restaurant'],
                     images: [],
-                    bankName: bankName || 'Bank of Maldives',
-                    accountHolder: accountHolder || name,
-                    accountNumber: accountNumber || '1234567890',
+                    bankName: 'Bank of Maldives',
+                    accountHolder: name,
+                    accountNumber: '1234567890',
                     bankBranch: 'Main Branch',
-                    lat: lat,
-                    lng: lng,
                     createdAt: new Date().toISOString()
                 };
                 
@@ -2629,12 +2129,12 @@
             showSuccess('Registration Successful!', 'Please login to continue');
             setTimeout(() => {
                 hideSuccess();
-                registerForm.style.display = 'none';
-                loginForm.style.display = 'block';
-            }, 2000);
+                registerFormDiv.style.display = 'none';
+                loginFormDiv.style.display = 'block';
+            }, 1500);
         });
-        
-        // Show Dashboard
+
+        // ========================== DASHBOARD & MENU ==========================
         function showDashboard() {
             loginPage.style.display = 'none';
             dashboardPage.style.display = 'block';
@@ -2646,45 +2146,19 @@
             setupMenu();
             setupBottomNav();
             
-            // Populate island filters
-            const islands = [...new Set(guestHouses.map(gh => gh.island))];
-            const filterButtons = document.getElementById('filterButtons');
-            filterButtons.innerHTML = '<button class="filter-btn active" data-filter="all">All Islands</button>';
-            islands.forEach(island => {
-                if (island) {
-                    filterButtons.innerHTML += `<button class="filter-btn" data-filter="${island}">${island}</button>`;
-                }
-            });
-            filterButtons.innerHTML += `<button class="filter-btn" data-filter="favorites">⭐ Favorites</button>`;
-            
-            // Add filter event listeners
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    currentFilter = this.dataset.filter;
-                    displayGuestHouses();
-                });
-            });
-            
-            // Set min dates for filters
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('filterCheckIn').min = today;
-            document.getElementById('filterCheckOut').min = today;
-            
             if (currentUser.role === 'guest') {
                 showSection('guestHome');
                 displayGuestHouses();
-                loadGuestProfile();
-                setTimeout(initMap, 500);
+                document.getElementById('profileName').value = currentUser.name || '';
+                document.getElementById('profileEmail').value = currentUser.email || '';
+                document.getElementById('profilePhone').value = currentUser.phone || '';
             } else {
                 showSection('ownerDashboard');
                 loadGuestHouseInfo();
                 updateOwnerStats();
             }
         }
-        
-        // Setup Menu
+
         function setupMenu() {
             const menu = document.getElementById('sidebarMenu');
             if (currentUser.role === 'guest') {
@@ -2722,8 +2196,7 @@
                 `;
             }
         }
-        
-        // Setup Bottom Navigation
+
         function setupBottomNav() {
             const bottomNav = document.getElementById('bottomNav');
             if (currentUser.role === 'guest') {
@@ -2766,623 +2239,228 @@
                 `;
             }
         }
-        
-        // Show Section
-        function showSection(sectionId) {
+
+        window.showSection = function(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             
-            if (sectionId === 'guestHome') {
-                displayGuestHouses();
-                setTimeout(initMap, 500);
-            } else if (sectionId === 'guestFavorites') {
-                displayFavorites();
-            } else if (sectionId === 'guestBookings') {
-                displayGuestBookings();
-            } else if (sectionId === 'guestProfile') {
-                loadGuestProfile();
-            } else if (sectionId === 'ownerRooms') {
-                displayOwnerRooms();
-            } else if (sectionId === 'ownerBookings') {
-                displayOwnerBookings();
-            } else if (sectionId === 'ownerGuests') {
-                displayGuests();
-            }
-        }
-        
-        // Search input
-        document.getElementById('searchInput')?.addEventListener('input', (e) => {
-            searchTerm = e.target.value.toLowerCase();
-            displayGuestHouses();
-        });
-        
-        // Apply date filter
-        function applyDateFilter() {
-            filterCheckIn = document.getElementById('filterCheckIn').value;
-            filterCheckOut = document.getElementById('filterCheckOut').value;
-            
-            if (filterCheckIn && filterCheckOut) {
-                if (new Date(filterCheckIn) >= new Date(filterCheckOut)) {
-                    showNotification('Check-out must be after check-in');
-                    return;
-                }
-                displayGuestHouses();
-            }
-        }
-        
-        // Display Guest Houses
+            if (sectionId === 'guestHome') displayGuestHouses();
+            else if (sectionId === 'guestFavorites') displayFavorites();
+            else if (sectionId === 'guestBookings') displayGuestBookings();
+            else if (sectionId === 'ownerRooms') displayOwnerRooms();
+            else if (sectionId === 'ownerBookings') displayOwnerBookings();
+            else if (sectionId === 'ownerGuests') displayGuests();
+        };
+
+        // ========================== GUEST FUNCTIONS ==========================
         function displayGuestHouses() {
             const container = document.getElementById('guestHousesList');
             container.innerHTML = '';
             
-            let filteredGH = guestHouses;
-            
-            // Apply island filter
-            if (currentFilter !== 'all' && currentFilter !== 'favorites') {
-                filteredGH = filteredGH.filter(gh => gh.island === currentFilter);
-            } else if (currentFilter === 'favorites') {
-                filteredGH = filteredGH.filter(gh => favorites.includes(gh.id));
-            }
-            
-            // Apply search filter
-            if (searchTerm) {
-                filteredGH = filteredGH.filter(gh => 
-                    gh.name.toLowerCase().includes(searchTerm) || 
-                    (gh.island && gh.island.toLowerCase().includes(searchTerm))
-                );
-            }
-            
-            if (filteredGH.length === 0) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-hotel"></i><p>No guest houses found</p></div>';
+            if (!guestHouses || guestHouses.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-hotel"></i><p>No guest houses available</p></div>';
                 return;
             }
             
-            filteredGH.forEach(gh => {
-                const ghRooms = rooms.filter(r => r.guestHouseId == gh.id);
-                
-                // Filter rooms by date if dates are selected
-                let availableRooms = ghRooms;
-                if (filterCheckIn && filterCheckOut) {
-                    availableRooms = ghRooms.filter(r => checkRoomAvailabilityForDates(r, filterCheckIn, filterCheckOut));
-                } else {
-                    availableRooms = ghRooms.filter(r => checkRoomAvailability(r));
-                }
-                
+            guestHouses.forEach(gh => {
+                const ghRooms = rooms.filter(r => r.guestHouseId === gh.id);
                 const minPrice = ghRooms.length > 0 ? Math.min(...ghRooms.map(r => r.price)) : 0;
-                const availableCount = availableRooms.length;
+                const availableRooms = ghRooms.filter(r => checkRoomAvailability(r)).length;
                 const isFavorite = favorites.includes(gh.id);
                 
                 const card = document.createElement('div');
                 card.className = 'guesthouse-card';
-                card.onclick = () => openGHDetails(gh.id);
+                card.onclick = () => openBookingModal(gh.id);
                 
-                const imageUrl = gh.images && gh.images.length > 0 ? gh.images[0] : 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(gh.name);
+                const imageUrl = gh.images && gh.images.length > 0 ? gh.images[0] : 'https://via.placeholder.com/400x300?text=' + gh.name;
                 
                 card.innerHTML = `
                     <div class="card-image" style="background-image: url('${imageUrl}')">
                         <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(${gh.id}, event)">
                             <i class="fas fa-heart"></i>
                         </button>
-                        <div class="card-rating">
-                            <i class="fas fa-star"></i> ${gh.rating || '4.5'}
-                        </div>
+                        <div class="card-rating"><i class="fas fa-star"></i> 4.5</div>
                     </div>
                     <div class="card-content">
                         <div class="card-title">${gh.name}</div>
-                        <div class="card-location">
-                            <i class="fas fa-map-marker-alt"></i> ${gh.island}
-                        </div>
+                        <div class="card-location"><i class="fas fa-map-marker-alt"></i> ${gh.island}</div>
                         <div class="card-facilities">
-                            ${(gh.facilities || []).slice(0, 3).map(f => `
-                                <span class="facility-tag"><i class="fas fa-check"></i> ${f}</span>
-                            `).join('')}
+                            ${(gh.facilities || []).slice(0, 3).map(f => `<span class="facility-tag"><i class="fas fa-check"></i> ${f}</span>`).join('')}
                         </div>
                         <div class="card-price">
-                            <div>
-                                <span class="price">${minPrice} <small>MVR</small></span>
-                                <span style="color: #666; font-size: 12px;">per night</span>
-                            </div>
-                            <span class="availability-badge ${availableCount > 0 ? 'available' : 'unavailable'}">
-                                ${availableCount} rooms
-                            </span>
+                            <div><span class="price">${minPrice} <small>MVR</small></span> <span style="color:#666; font-size:12px;">per night</span></div>
+                            <span class="availability-badge ${availableRooms > 0 ? 'available' : 'unavailable'}">${availableRooms} rooms</span>
                         </div>
                     </div>
                 `;
-                
                 container.appendChild(card);
             });
-            
-            // Update map markers
-            if (mainMap) {
-                mapMarkers.forEach(marker => marker.remove());
-                mapMarkers = [];
-                
-                filteredGH.forEach(gh => {
-                    if (gh.lat && gh.lng) {
-                        const ghRooms = rooms.filter(r => r.guestHouseId == gh.id);
-                        let availableRooms = ghRooms;
-                        if (filterCheckIn && filterCheckOut) {
-                            availableRooms = ghRooms.filter(r => checkRoomAvailabilityForDates(r, filterCheckIn, filterCheckOut));
-                        } else {
-                            availableRooms = ghRooms.filter(r => checkRoomAvailability(r));
-                        }
-                        
-                        const minPrice = ghRooms.length > 0 ? Math.min(...ghRooms.map(r => r.price)) : 0;
-                        const availableCount = availableRooms.length;
-                        
-                        const marker = L.marker([gh.lat, gh.lng]).addTo(mainMap);
-                        marker.bindPopup(`
-                            <b>${gh.name}</b><br>
-                            ${gh.island}, Maldives<br>
-                            <span style="color: #0066cc;">From ${minPrice} MVR/night</span><br>
-                            <span style="color: ${availableCount > 0 ? '#4caf50' : '#f44336'};">
-                                ${availableCount} rooms available
-                            </span><br>
-                            <button onclick="openGHDetails(${gh.id})" style="padding: 5px 10px; margin-top: 5px; background: #0066cc; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                View Details
-                            </button>
-                        `);
-                        
-                        mapMarkers.push(marker);
-                    }
-                });
-            }
         }
-        
-        // Open Guest House Details
-        function openGHDetails(ghId) {
-            const gh = guestHouses.find(g => g.id == ghId);
-            if (!gh) return;
-            
-            const ghRooms = rooms.filter(r => r.guestHouseId == gh.id);
-            
-            let roomsHtml = '';
-            if (ghRooms.length > 0) {
-                roomsHtml = `
-                    <h4 style="margin: 20px 0 10px;">Available Rooms</h4>
-                    <div class="rooms-grid" style="max-height: 400px; overflow-y: auto;">
-                `;
-                
-                ghRooms.forEach(room => {
-                    const isAvailable = checkRoomAvailability(room);
-                    const roomImage = room.images && room.images.length > 0 ? room.images[0] : 'https://via.placeholder.com/300x200?text=Room';
-                    
-                    roomsHtml += `
-                        <div class="room-card" onclick="openRoomDetailsModal(${room.id})">
-                            <div class="room-image" style="background-image: url('${roomImage}')">
-                                <div class="room-status ${isAvailable ? 'available' : 'unavailable'}">
-                                    ${isAvailable ? 'Available' : 'Unavailable'}
-                                </div>
-                                ${room.images && room.images.length > 1 ? `
-                                    <div class="room-image-gallery">
-                                        <i class="fas fa-images"></i> ${room.images.length}
-                                    </div>
-                                ` : ''}
-                            </div>
-                            <div class="room-info">
-                                <div class="room-type">${room.type} ${room.number ? `- ${room.number}` : ''}</div>
-                                <div class="room-capacity">
-                                    <i class="fas fa-users"></i> Max ${room.capacity} guests
-                                </div>
-                                <div class="room-price">${room.price} MVR / night</div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                roomsHtml += '</div>';
-            } else {
-                roomsHtml = '<p style="text-align: center; padding: 20px;">No rooms available</p>';
-            }
-            
-            let imagesHtml = '';
-            if (gh.images && gh.images.length > 0) {
-                imagesHtml = `
-                    <h4 style="margin: 15px 0 10px;">Gallery</h4>
-                    <div class="image-gallery">
-                        ${gh.images.map(img => `
-                            <img src="${img}" class="gallery-image" onclick="showFullscreenImage('${img}'); event.stopPropagation();">
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            document.getElementById('ghDetailsName').textContent = gh.name;
-            document.getElementById('ghDetailsContent').innerHTML = `
-                ${imagesHtml}
-                <div class="location-info">
-                    <i class="fas fa-map-marker-alt"></i> ${gh.island}, Maldives
-                </div>
-                <p>${gh.description || 'No description available'}</p>
-                
-                <h4 style="margin: 15px 0 10px;">Facilities</h4>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;">
-                    ${(gh.facilities || []).map(f => `
-                        <span class="facility-tag"><i class="fas fa-check"></i> ${f}</span>
-                    `).join('')}
-                </div>
-                
-                <h4 style="margin: 15px 0 10px;">Contact</h4>
-                <p><i class="fas fa-phone"></i> ${gh.contact || 'Not available'}</p>
-                <p><i class="fas fa-envelope"></i> ${gh.email || 'Not available'}</p>
-                
-                ${roomsHtml}
-            `;
-            
-            document.getElementById('bookFromDetailsBtn').onclick = () => {
-                closeGHDetails();
-                openBookingModal(ghId);
-            };
-            
-            document.getElementById('ghDetailsModal').classList.add('active');
-        }
-        
-        // Close Guest House Details
-        function closeGHDetails() {
-            document.getElementById('ghDetailsModal').classList.remove('active');
-        }
-        
-        // Show Fullscreen Image
-        function showFullscreenImage(src) {
-            document.getElementById('fullscreenImg').src = src;
-            document.getElementById('fullscreenImage').style.display = 'flex';
-        }
-        
-        function closeFullscreenImage() {
-            document.getElementById('fullscreenImage').style.display = 'none';
-        }
-        
-        // Open Room Details Modal
-        function openRoomDetailsModal(roomId) {
-            const room = rooms.find(r => r.id == roomId);
-            if (!room) return;
-            
-            const modal = document.getElementById('roomDetailsModal');
-            const content = document.getElementById('roomDetailsContent');
-            
-            let imagesHtml = '';
-            if (room.images && room.images.length > 0) {
-                imagesHtml = `
-                    <div class="image-gallery">
-                        ${room.images.map(img => `
-                            <img src="${img}" class="gallery-image" onclick="showFullscreenImage('${img}'); event.stopPropagation();">
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            let amenitiesHtml = '';
-            if (room.amenities && room.amenities.length > 0) {
-                amenitiesHtml = `
-                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0;">
-                        ${room.amenities.map(a => `
-                            <span class="facility-tag"><i class="fas fa-check"></i> ${a}</span>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            const isAvailable = checkRoomAvailability(room);
-            
-            content.innerHTML = `
-                ${imagesHtml}
-                <h4 style="margin: 15px 0 5px;">${room.type} ${room.number ? `- ${room.number}` : ''}</h4>
-                <p><i class="fas fa-users"></i> Capacity: ${room.capacity} persons</p>
-                <p><i class="fas fa-tag"></i> Price: ${room.price} MVR / night</p>
-                <p>${room.description || 'No description available'}</p>
-                ${amenitiesHtml}
-                <div class="room-status ${isAvailable ? 'available' : 'unavailable'}" style="display: inline-block; padding: 8px 15px; margin-top: 10px;">
-                    ${isAvailable ? '✓ Available for booking' : '✗ Currently unavailable'}
-                </div>
-            `;
-            
-            document.getElementById('roomDetailsTitle').textContent = room.type;
-            document.getElementById('addToBookingBtn').onclick = () => {
-                closeRoomDetailsModal();
-                if (!currentBookingGH) {
-                    const gh = guestHouses.find(g => g.id == room.guestHouseId);
-                    if (gh) {
-                        openBookingModal(gh.id);
-                        setTimeout(() => {
-                            const input = document.querySelector(`input[onchange*="updateRoomSelection(${room.id}"]`);
-                            if (input) {
-                                input.value = 1;
-                                updateRoomSelection(room.id, 1);
-                            }
-                        }, 500);
-                    }
-                } else {
-                    const input = document.querySelector(`input[onchange*="updateRoomSelection(${room.id}"]`);
-                    if (input) {
-                        const currentValue = parseInt(input.value) || 0;
-                        input.value = currentValue + 1;
-                        updateRoomSelection(room.id, currentValue + 1);
-                    }
-                }
-            };
-            
-            modal.classList.add('active');
-        }
-        
-        // Close Room Details Modal
-        function closeRoomDetailsModal() {
-            document.getElementById('roomDetailsModal').classList.remove('active');
-        }
-        
-        // Toggle Favorite
-        function toggleFavorite(ghId, event) {
+
+        window.toggleFavorite = function(ghId, event) {
             event.stopPropagation();
-            
             const index = favorites.indexOf(ghId);
-            if (index === -1) {
-                favorites.push(ghId);
-                showNotification('Added to favorites');
-            } else {
-                favorites.splice(index, 1);
-                showNotification('Removed from favorites');
-            }
-            
+            if (index === -1) { favorites.push(ghId); showNotification('Added to favorites'); }
+            else { favorites.splice(index, 1); showNotification('Removed from favorites'); }
             localStorage.setItem('favorites', JSON.stringify(favorites));
             displayGuestHouses();
-        }
-        
-        // Display Favorites
+        };
+
         function displayFavorites() {
             const container = document.getElementById('favoritesList');
             container.innerHTML = '';
-            
-            const favGuestHouses = guestHouses.filter(gh => favorites.includes(gh.id));
-            
-            if (favGuestHouses.length === 0) {
+            const favGH = guestHouses.filter(gh => favorites.includes(gh.id));
+            if (favGH.length === 0) {
                 container.innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>No favorites yet</p></div>';
                 return;
             }
-            
-            favGuestHouses.forEach(gh => {
-                const ghRooms = rooms.filter(r => r.guestHouseId == gh.id);
+            favGH.forEach(gh => {
+                const ghRooms = rooms.filter(r => r.guestHouseId === gh.id);
                 const minPrice = ghRooms.length > 0 ? Math.min(...ghRooms.map(r => r.price)) : 0;
-                
                 const card = document.createElement('div');
                 card.className = 'guesthouse-card';
-                card.onclick = () => openGHDetails(gh.id);
-                
-                const imageUrl = gh.images && gh.images.length > 0 ? gh.images[0] : 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(gh.name);
-                
+                card.onclick = () => openBookingModal(gh.id);
+                const imageUrl = gh.images && gh.images.length > 0 ? gh.images[0] : 'https://via.placeholder.com/400x300?text=' + gh.name;
                 card.innerHTML = `
                     <div class="card-image" style="background-image: url('${imageUrl}')">
-                        <button class="favorite-btn active" onclick="toggleFavorite(${gh.id}, event)">
-                            <i class="fas fa-heart"></i>
-                        </button>
+                        <button class="favorite-btn active" onclick="toggleFavorite(${gh.id}, event)"><i class="fas fa-heart"></i></button>
                     </div>
                     <div class="card-content">
                         <div class="card-title">${gh.name}</div>
-                        <div class="card-location">
-                            <i class="fas fa-map-marker-alt"></i> ${gh.island}
-                        </div>
+                        <div class="card-location"><i class="fas fa-map-marker-alt"></i> ${gh.island}</div>
                         <div class="card-price">
-                            <div>
-                                <span class="price">${minPrice} <small>MVR</small></span>
-                            </div>
+                            <div><span class="price">${minPrice} <small>MVR</small></span></div>
                             <button class="action-btn view-btn" onclick="event.stopPropagation(); openBookingModal(${gh.id})">Book</button>
                         </div>
                     </div>
                 `;
-                
                 container.appendChild(card);
             });
         }
-        
-        // Check Room Availability
+
         function checkRoomAvailability(room) {
-            if (!room) return false;
             if (!room.unavailableDates || room.unavailableDates.length === 0) return true;
-            
             const today = new Date().toISOString().split('T')[0];
             const todayTime = new Date(today).getTime();
-            
             for (const range of room.unavailableDates) {
                 const fromTime = new Date(range.from).getTime();
                 const toTime = new Date(range.to).getTime();
-                
-                if (todayTime >= fromTime && todayTime <= toTime) {
-                    return false;
-                }
+                if (todayTime >= fromTime && todayTime <= toTime) return false;
             }
-            
             return true;
         }
-        
-        // Check Room Availability for Dates
+
         function checkRoomAvailabilityForDates(room, checkIn, checkOut) {
-            if (!room) return false;
             if (!room.unavailableDates || room.unavailableDates.length === 0) return true;
-            
             const checkInTime = new Date(checkIn).getTime();
             const checkOutTime = new Date(checkOut).getTime();
-            
             for (const range of room.unavailableDates) {
                 const fromTime = new Date(range.from).getTime();
                 const toTime = new Date(range.to).getTime();
-                
-                if (checkInTime <= toTime && checkOutTime >= fromTime) {
-                    return false;
-                }
+                if (checkInTime <= toTime && checkOutTime >= fromTime) return false;
             }
-            
-            // Check for existing bookings
-            const roomBookings = bookings.filter(b => 
-                b.bookedRooms && b.bookedRooms.some(r => r.roomId == room.id) && 
-                (b.status === 'approved' || b.status === 'checked-in')
-            );
-            
-            for (const booking of roomBookings) {
-                const bookingCheckIn = new Date(booking.checkIn).getTime();
-                const bookingCheckOut = new Date(booking.checkOut).getTime();
-                
-                if (checkInTime <= bookingCheckOut && checkOutTime >= bookingCheckIn) {
-                    return false;
-                }
-            }
-            
             return true;
         }
-        
-        // Update Guest Count
-        function updateGuestCount(type, change) {
-            const newValue = guestCounts[type] + change;
-            if (newValue < 0) return;
-            if (type === 'adults' && newValue === 0) return;
-            
-            guestCounts[type] = newValue;
-            document.getElementById(type + 'Count').textContent = newValue;
+
+        window.updateGuestCount = function(type, change) {
+            const newVal = guestCounts[type] + change;
+            if (newVal < 0) return;
+            if (type === 'adults' && newVal === 0) return;
+            guestCounts[type] = newVal;
+            document.getElementById(type + 'Count').textContent = newVal;
             updateBookingSummary();
-        }
-        
-        // Open Booking Modal
+        };
+
         function openBookingModal(ghId) {
-            const gh = guestHouses.find(g => g.id == ghId);
+            const gh = guestHouses.find(g => g.id === ghId);
             if (!gh) return;
-            
             currentBookingGH = gh;
             selectedRooms = [];
-            
-            document.getElementById('bookingGHName').textContent = gh.name;
-            
-            // Reset guest counts
             guestCounts = { adults: 2, children: 0, infants: 0 };
             document.getElementById('adultsCount').textContent = '2';
             document.getElementById('childrenCount').textContent = '0';
             document.getElementById('infantsCount').textContent = '0';
             
-            // Set min dates
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('bookingCheckIn').min = today;
             document.getElementById('bookingCheckIn').value = today;
-            
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
             document.getElementById('bookingCheckOut').min = tomorrow.toISOString().split('T')[0];
             document.getElementById('bookingCheckOut').value = tomorrow.toISOString().split('T')[0];
             
-            // Load available rooms
             loadAvailableRooms();
             
-            // Set bank details
             document.getElementById('bankName').textContent = gh.bankName || 'Bank of Maldives';
             document.getElementById('accountNumber').textContent = gh.accountNumber || '1234567890';
             document.getElementById('accountHolder').textContent = gh.accountHolder || gh.name;
             
-            // Pre-fill user info
-            if (currentUser) {
-                document.getElementById('bookingName').value = currentUser.name || '';
-                document.getElementById('bookingEmail').value = currentUser.email || '';
-                document.getElementById('bookingPhone').value = currentUser.phone || '';
-            }
+            document.getElementById('bookingName').value = currentUser?.name || '';
+            document.getElementById('bookingEmail').value = currentUser?.email || '';
+            document.getElementById('bookingPhone').value = currentUser?.phone || '';
+            document.getElementById('bookingGHName').textContent = gh.name;
             
             updateBookingSummary();
-            
             document.getElementById('bookingModal').classList.add('active');
         }
-        
-        // Load Available Rooms
+
         function loadAvailableRooms() {
             const container = document.getElementById('availableRoomsList');
             if (!currentBookingGH) return;
-            
-            const checkIn = document.getElementById('bookingCheckIn').value;
-            const checkOut = document.getElementById('bookingCheckOut').value;
-            
-            const ghRooms = rooms.filter(r => r.guestHouseId == currentBookingGH.id);
-            
+            const ghRooms = rooms.filter(r => r.guestHouseId === currentBookingGH.id);
             if (ghRooms.length === 0) {
                 container.innerHTML = '<p style="text-align: center; padding: 20px;">No rooms available</p>';
                 return;
             }
-            
             container.innerHTML = '';
             ghRooms.forEach(room => {
-                const isAvailable = checkIn && checkOut ? 
-                    checkRoomAvailabilityForDates(room, checkIn, checkOut) : 
-                    checkRoomAvailability(room);
-                    
-                if (!isAvailable) return;
-                
+                if (!checkRoomAvailability(room)) return;
                 const roomImage = room.images && room.images.length > 0 ? room.images[0] : 'https://via.placeholder.com/300x200?text=Room';
-                
                 const card = document.createElement('div');
                 card.className = 'room-card';
-                card.onclick = () => openRoomDetailsModal(room.id);
-                
+                card.onclick = () => showRoomDetails(room.id);
                 card.innerHTML = `
                     <div class="room-image" style="background-image: url('${roomImage}')">
                         <div class="room-status available">Available</div>
-                        ${room.images && room.images.length > 1 ? `
-                            <div class="room-image-gallery">
-                                <i class="fas fa-images"></i> ${room.images.length}
-                            </div>
-                        ` : ''}
+                        ${room.images && room.images.length > 1 ? `<div class="room-image-gallery"><i class="fas fa-images"></i> ${room.images.length}</div>` : ''}
                     </div>
                     <div class="room-info">
                         <div class="room-type">${room.type} ${room.number ? `- ${room.number}` : ''}</div>
-                        <div class="room-capacity">
-                            <i class="fas fa-users"></i> Max ${room.capacity} guests
-                        </div>
+                        <div class="room-capacity"><i class="fas fa-users"></i> Max ${room.capacity} guests</div>
                         <div class="room-price">${room.price} MVR / night</div>
                         <div class="room-selector">
                             <span>Quantity:</span>
-                            <input type="number" min="0" max="3" value="0" 
-                                   onchange="updateRoomSelection(${room.id}, this.value)" 
-                                   onclick="event.stopPropagation()">
+                            <input type="number" min="0" max="3" value="0" onchange="updateRoomSelection(${room.id}, this.value)" onclick="event.stopPropagation()">
                         </div>
                     </div>
                 `;
-                
                 container.appendChild(card);
             });
         }
-        
-        // Update Room Selection
-        function updateRoomSelection(roomId, quantity) {
+
+        window.updateRoomSelection = function(roomId, quantity) {
             quantity = parseInt(quantity) || 0;
-            
-            const room = rooms.find(r => r.id == roomId);
+            const room = rooms.find(r => r.id === roomId);
             if (!room) return;
-            
-            const existingIndex = selectedRooms.findIndex(r => r.roomId == roomId);
-            
+            const existingIndex = selectedRooms.findIndex(r => r.roomId === roomId);
             if (quantity > 0) {
                 if (existingIndex >= 0) {
                     selectedRooms[existingIndex].quantity = quantity;
                 } else {
-                    selectedRooms.push({
-                        roomId: roomId,
-                        room: room,
-                        quantity: quantity,
-                        pricePerNight: room.price
-                    });
+                    selectedRooms.push({ roomId, room, quantity, pricePerNight: room.price });
                 }
             } else {
-                if (existingIndex >= 0) {
-                    selectedRooms.splice(existingIndex, 1);
-                }
+                if (existingIndex >= 0) selectedRooms.splice(existingIndex, 1);
             }
-            
             displaySelectedRooms();
             updateBookingSummary();
-        }
-        
-        // Display Selected Rooms
+        };
+
         function displaySelectedRooms() {
             const container = document.getElementById('selectedRoomsContainer');
-            
-            if (selectedRooms.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-            
+            if (selectedRooms.length === 0) { container.innerHTML = ''; return; }
             let html = '<h4 style="margin-bottom: 10px;">Selected Rooms:</h4>';
             selectedRooms.forEach(item => {
                 html += `
@@ -3391,424 +2469,261 @@
                             <h4>${item.room.type} ${item.room.number ? `- ${item.room.number}` : ''}</h4>
                             <p>${item.quantity} x ${item.room.price} MVR/night</p>
                         </div>
-                        <span class="remove-room" onclick="removeRoom(${item.roomId})">
-                            <i class="fas fa-times"></i>
-                        </span>
+                        <span class="remove-room" onclick="removeRoom(${item.roomId})"><i class="fas fa-times"></i></span>
                     </div>
                 `;
             });
-            
             container.innerHTML = html;
         }
-        
-        // Remove Room
-        function removeRoom(roomId) {
-            const index = selectedRooms.findIndex(r => r.roomId == roomId);
+
+        window.removeRoom = function(roomId) {
+            const index = selectedRooms.findIndex(r => r.roomId === roomId);
             if (index >= 0) {
                 selectedRooms.splice(index, 1);
-                
-                // Reset the input
                 const input = document.querySelector(`input[onchange*="updateRoomSelection(${roomId}"]`);
                 if (input) input.value = 0;
-                
                 displaySelectedRooms();
                 updateBookingSummary();
             }
+        };
+
+        function showRoomDetails(roomId) {
+            const room = rooms.find(r => r.id === roomId);
+            if (!room) return;
+            const modal = document.getElementById('roomDetailsModal');
+            const content = document.getElementById('roomDetailsContent');
+            let imagesHtml = room.images && room.images.length ? `
+                <div style="display: flex; gap: 10px; overflow-x: auto; padding: 10px 0;">
+                    ${room.images.map(img => `<img src="${img}" style="width:150px; height:100px; object-fit:cover; border-radius:8px;">`).join('')}
+                </div>` : '';
+            let amenitiesHtml = room.amenities && room.amenities.length ? `
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin:15px 0;">
+                    ${room.amenities.map(a => `<span class="facility-tag"><i class="fas fa-check"></i> ${a}</span>`).join('')}
+                </div>` : '';
+            content.innerHTML = `
+                ${imagesHtml}
+                <h4 style="margin:15px 0 5px;">${room.type} ${room.number ? `- ${room.number}` : ''}</h4>
+                <p><i class="fas fa-users"></i> Capacity: ${room.capacity} persons</p>
+                <p><i class="fas fa-tag"></i> Price: ${room.price} MVR / night</p>
+                <p>${room.description || 'No description available'}</p>
+                ${amenitiesHtml}
+            `;
+            document.getElementById('roomDetailsTitle').textContent = currentBookingGH?.name || 'Room Details';
+            document.getElementById('addToBookingBtn').onclick = () => {
+                const input = document.querySelector(`input[onchange*="updateRoomSelection(${roomId}"]`);
+                if (input) {
+                    const curr = parseInt(input.value) || 0;
+                    input.value = curr + 1;
+                    updateRoomSelection(roomId, curr + 1);
+                }
+                closeRoomDetailsModal();
+            };
+            modal.classList.add('active');
         }
-        
-        // Update Booking Summary
+
+        function closeRoomDetailsModal() {
+            document.getElementById('roomDetailsModal').classList.remove('active');
+        }
+
         function updateBookingSummary() {
             const checkIn = document.getElementById('bookingCheckIn').value;
             const checkOut = document.getElementById('bookingCheckOut').value;
-            
             if (!checkIn || !checkOut) return;
-            
-            const nights = calculateNights(checkIn, checkOut);
+            const nights = Math.ceil((new Date(checkOut) - new Date(checkIn)) / (86400000)) || 1;
             document.getElementById('summaryNights').textContent = nights;
-            
-            const totalGuests = guestCounts.adults + guestCounts.children + guestCounts.infants;
-            let guestText = `${guestCounts.adults} Adults`;
-            if (guestCounts.children > 0) guestText += `, ${guestCounts.children} Children`;
-            if (guestCounts.infants > 0) guestText += `, ${guestCounts.infants} Infants`;
+            const guestText = `${guestCounts.adults} Adults` + (guestCounts.children > 0 ? `, ${guestCounts.children} Children` : '') + (guestCounts.infants > 0 ? `, ${guestCounts.infants} Infants` : '');
             document.getElementById('summaryGuests').textContent = guestText;
-            
             document.getElementById('summaryRooms').textContent = selectedRooms.length;
-            
             let total = 0;
-            selectedRooms.forEach(item => {
-                total += item.quantity * item.pricePerNight * nights;
-            });
-            
+            selectedRooms.forEach(item => total += item.quantity * item.pricePerNight * nights);
             document.getElementById('summaryTotal').textContent = total + ' MVR';
-            
-            // Reload available rooms when dates change
-            loadAvailableRooms();
         }
-        
-        // Calculate Nights
-        function calculateNights(checkIn, checkOut) {
-            const start = new Date(checkIn);
-            const end = new Date(checkOut);
-            const diffTime = Math.abs(end - start);
-            return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
-        }
-        
-        // Copy Account Number
-        function copyAccountNumber() {
-            const accountNumber = document.getElementById('accountNumber').textContent;
-            navigator.clipboard.writeText(accountNumber).then(() => {
-                showNotification('Account number copied!');
-            });
-        }
-        
-        // Payment Slip Upload
+
+        window.copyAccountNumber = function() {
+            const acc = document.getElementById('accountNumber').textContent;
+            navigator.clipboard.writeText(acc).then(() => showNotification('Account number copied!'));
+        };
+
+        // Payment slip upload
         const paymentSlipUpload = document.getElementById('paymentSlipUpload');
         const paymentSlipInput = document.getElementById('paymentSlip');
         const paymentSlipPreview = document.getElementById('paymentSlipPreview');
-        
-        paymentSlipUpload?.addEventListener('click', () => paymentSlipInput.click());
-        
-        paymentSlipUpload?.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            paymentSlipUpload.style.borderColor = '#00a8cc';
-        });
-        
-        paymentSlipUpload?.addEventListener('dragleave', () => {
-            paymentSlipUpload.style.borderColor = '#ddd';
-        });
-        
-        paymentSlipUpload?.addEventListener('drop', (e) => {
-            e.preventDefault();
-            paymentSlipUpload.style.borderColor = '#ddd';
-            handlePaymentSlip(e.dataTransfer.files[0]);
-        });
-        
-        paymentSlipInput?.addEventListener('change', () => {
-            if (paymentSlipInput.files[0]) {
-                handlePaymentSlip(paymentSlipInput.files[0]);
-            }
-        });
-        
+        paymentSlipUpload.addEventListener('click', () => paymentSlipInput.click());
+        paymentSlipUpload.addEventListener('dragover', e => { e.preventDefault(); paymentSlipUpload.style.borderColor = '#00a8cc'; });
+        paymentSlipUpload.addEventListener('dragleave', () => paymentSlipUpload.style.borderColor = '#ddd');
+        paymentSlipUpload.addEventListener('drop', e => { e.preventDefault(); paymentSlipUpload.style.borderColor = '#ddd'; handlePaymentSlip(e.dataTransfer.files[0]); });
+        paymentSlipInput.addEventListener('change', () => { if (paymentSlipInput.files[0]) handlePaymentSlip(paymentSlipInput.files[0]); });
+
         function handlePaymentSlip(file) {
             if (!file) return;
-            
             const reader = new FileReader();
             reader.onload = (e) => {
-                paymentSlipPreview.innerHTML = `
-                    <img src="${e.target.result}" class="payment-preview">
-                `;
+                paymentSlipPreview.innerHTML = `<img src="${e.target.result}" class="payment-preview">`;
                 window.paymentSlipData = e.target.result;
             };
             reader.readAsDataURL(file);
         }
-        
-        // Submit Booking
-        async function submitBooking() {
+
+        window.submitBooking = function() {
             if (!currentBookingGH) return;
-            
             const name = document.getElementById('bookingName').value;
             const email = document.getElementById('bookingEmail').value;
             const phone = document.getElementById('bookingPhone').value;
             const checkIn = document.getElementById('bookingCheckIn').value;
             const checkOut = document.getElementById('bookingCheckOut').value;
-            
-            if (!name || !email || !phone) {
-                showNotification('Please fill all contact details');
-                return;
-            }
-            
-            if (selectedRooms.length === 0) {
-                showNotification('Please select at least one room');
-                return;
-            }
-            
-            if (!window.paymentSlipData) {
-                showNotification('Please upload payment slip');
-                return;
-            }
-            
-            const nights = calculateNights(checkIn, checkOut);
+            if (!name || !email || !phone) { showNotification('Please fill all contact details'); return; }
+            if (selectedRooms.length === 0) { showNotification('Please select at least one room'); return; }
+            if (!window.paymentSlipData) { showNotification('Please upload payment slip'); return; }
+            const nights = Math.ceil((new Date(checkOut) - new Date(checkIn)) / (86400000)) || 1;
             let total = 0;
             const bookedRooms = [];
-            
             selectedRooms.forEach(item => {
                 total += item.quantity * item.pricePerNight * nights;
-                for (let i = 0; i < item.quantity; i++) {
-                    bookedRooms.push({
-                        roomId: item.roomId,
-                        roomType: item.room.type,
-                        pricePerNight: item.pricePerNight
-                    });
-                }
+                for (let i=0; i<item.quantity; i++) bookedRooms.push({ roomId: item.roomId, roomType: item.room.type, pricePerNight: item.pricePerNight });
             });
-            
             const booking = {
                 id: Date.now(),
                 bookingId: 'BK' + Date.now().toString().slice(-8),
-                guestName: name,
-                guestEmail: email,
-                guestPhone: phone,
-                guestHouseId: currentBookingGH.id,
-                guestHouseName: currentBookingGH.name,
-                bookedRooms: bookedRooms,
-                checkIn: checkIn,
-                checkOut: checkOut,
-                nights: nights,
-                guests: {
-                    adults: guestCounts.adults,
-                    children: guestCounts.children,
-                    infants: guestCounts.infants
-                },
-                total: total,
-                status: 'pending',
+                guestName: name, guestEmail: email, guestPhone: phone,
+                guestHouseId: currentBookingGH.id, guestHouseName: currentBookingGH.name,
+                bookedRooms, checkIn, checkOut, nights,
+                guests: { adults: guestCounts.adults, children: guestCounts.children, infants: guestCounts.infants },
+                total, status: 'pending',
                 requests: document.getElementById('bookingRequests').value,
                 paymentSlip: window.paymentSlipData,
                 createdAt: new Date().toISOString()
             };
-            
-            await database.ref('bookings/' + booking.id).set(booking);
-            
-            // Create notification for guest
-            await createNotification(
-                currentUser.id,
-                'Booking Submitted',
-                `Your booking at ${currentBookingGH.name} (${booking.bookingId}) has been submitted. Waiting for owner approval.`
-            );
-            
-            // Create notification for owner
-            await createNotification(
-                currentBookingGH.ownerId,
-                'New Booking',
-                `New booking from ${name} at ${currentBookingGH.name}. Booking ID: ${booking.bookingId}`
-            );
-            
+            database.ref('bookings/' + booking.id).set(booking);
             closeBookingModal();
-            
-            showSuccess('Booking Submitted!', `Booking ID: ${booking.bookingId}. Please wait for owner approval.`);
+            showSuccess('Booking Submitted!', `Booking ID: ${booking.bookingId}. Wait for owner approval.`);
             setTimeout(hideSuccess, 3000);
-        }
-        
-        // Close Booking Modal
+        };
+
         function closeBookingModal() {
             document.getElementById('bookingModal').classList.remove('active');
             paymentSlipPreview.innerHTML = '';
             window.paymentSlipData = null;
             selectedRooms = [];
         }
-        
-        // Display Guest Bookings
+
         function displayGuestBookings() {
             const container = document.getElementById('guestBookingsList');
             container.innerHTML = '';
-            
             const guestBookings = bookings.filter(b => b.guestEmail === currentUser?.email);
-            
             if (guestBookings.length === 0) {
                 container.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-times"></i><p>No bookings yet</p></div>';
                 return;
             }
-            
-            guestBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            
-            guestBookings.forEach(booking => {
-                const card = document.createElement('div');
-                card.className = 'guesthouse-card';
-                
-                const statusClass = `status-${booking.status}`;
-                const statusText = booking.status.charAt(0).toUpperCase() + booking.status.slice(1);
-                
+            guestBookings.sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt));
+            guestBookings.forEach(b => {
+                const card = document.createElement('div'); card.className = 'guesthouse-card';
+                const statusClass = `status-${b.status}`;
                 card.innerHTML = `
                     <div class="card-content">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span class="card-title">${booking.guestHouseName}</span>
-                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span class="card-title">${b.guestHouseName}</span>
+                            <span class="status-badge ${statusClass}">${b.status}</span>
                         </div>
-                        <div style="margin-bottom: 10px;">
-                            <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
-                            <p><strong>Rooms:</strong> ${booking.bookedRooms.length}</p>
-                            <p><strong>Check-in:</strong> ${booking.checkIn}</p>
-                            <p><strong>Check-out:</strong> ${booking.checkOut}</p>
-                            <p><strong>Guests:</strong> ${booking.guests.adults} Adults, ${booking.guests.children} Children, ${booking.guests.infants} Infants</p>
-                            <p><strong>Total:</strong> ${booking.total} MVR</p>
+                        <div style="margin-bottom:10px;">
+                            <p><strong>Rooms:</strong> ${b.bookedRooms.length}</p>
+                            <p><strong>Check-in:</strong> ${b.checkIn}</p>
+                            <p><strong>Check-out:</strong> ${b.checkOut}</p>
+                            <p><strong>Total:</strong> ${b.total} MVR</p>
                         </div>
-                        <div style="display: flex; gap: 5px;">
-                            <button class="action-btn view-btn" onclick="viewBookingDetails(${booking.id})">
-                                View Details
-                            </button>
-                            ${booking.status === 'pending' ? `
-                                <button class="action-btn reject-btn" onclick="cancelBooking(${booking.id})">
-                                    Cancel
-                                </button>
-                            ` : ''}
+                        <div style="display:flex; gap:5px;">
+                            <button class="action-btn view-btn" onclick="viewBookingDetails(${b.id})">View</button>
+                            ${b.status==='pending' ? `<button class="action-btn reject-btn" onclick="cancelBooking(${b.id})">Cancel</button>` : ''}
                         </div>
                     </div>
                 `;
-                
                 container.appendChild(card);
             });
         }
-        
-        // View Booking Details
-        function viewBookingDetails(bookingId) {
-            const booking = bookings.find(b => b.id == bookingId);
+
+        window.viewBookingDetails = function(bookingId) {
+            const booking = bookings.find(b => b.id === bookingId);
             if (!booking) return;
-            
             let roomsList = '';
-            booking.bookedRooms.forEach((room, index) => {
-                roomsList += `<p>Room ${index + 1}: ${room.roomType} - ${room.pricePerNight} MVR/night</p>`;
-            });
-            
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
+            booking.bookedRooms.forEach((room, idx) => roomsList += `<p>Room ${idx+1}: ${room.roomType} - ${room.pricePerNight} MVR/night</p>`);
+            const modal = document.createElement('div'); modal.className = 'modal-overlay active';
             modal.innerHTML = `
                 <div class="modal">
-                    <div class="modal-header">
-                        <h3>Booking Details</h3>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
-                        <p><strong>Status:</strong> <span class="status-badge status-${booking.status}">${booking.status}</span></p>
-                    </div>
-                    
-                    <div style="background: #f5f5f5; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                        <h4 style="margin-bottom: 10px;">Guest Information</h4>
+                    <div class="modal-header"><h3>Booking Details</h3></div>
+                    <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
+                    <p><strong>Status:</strong> <span class="status-badge status-${booking.status}">${booking.status}</span></p>
+                    <div style="background:#f5f5f5; padding:15px; border-radius:10px; margin:10px 0;">
+                        <h4>Guest Information</h4>
                         <p><strong>Name:</strong> ${booking.guestName}</p>
                         <p><strong>Email:</strong> ${booking.guestEmail}</p>
                         <p><strong>Phone:</strong> ${booking.guestPhone}</p>
                     </div>
-                    
-                    <div style="background: #f5f5f5; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                        <h4 style="margin-bottom: 10px;">Booking Details</h4>
+                    <div style="background:#f5f5f5; padding:15px; border-radius:10px; margin:10px 0;">
+                        <h4>Booking Details</h4>
                         <p><strong>Guest House:</strong> ${booking.guestHouseName}</p>
-                        <p><strong>Rooms:</strong></p>
-                        ${roomsList}
-                        <p><strong>Check-in:</strong> ${booking.checkIn}</p>
-                        <p><strong>Check-out:</strong> ${booking.checkOut}</p>
+                        <p><strong>Rooms:</strong></p>${roomsList}
+                        <p><strong>Dates:</strong> ${booking.checkIn} to ${booking.checkOut}</p>
                         <p><strong>Nights:</strong> ${booking.nights}</p>
                         <p><strong>Guests:</strong> ${booking.guests.adults} Adults, ${booking.guests.children} Children, ${booking.guests.infants} Infants</p>
                         <p><strong>Total:</strong> ${booking.total} MVR</p>
-                        ${booking.requests ? `<p><strong>Requests:</strong> ${booking.requests}</p>` : ''}
                     </div>
-                    
-                    ${booking.paymentSlip ? `
-                        <div style="margin-bottom: 15px;">
-                            <h4 style="margin-bottom: 10px;">Payment Slip</h4>
-                            <img src="${booking.paymentSlip}" style="max-width: 100%; border-radius: 10px; cursor: pointer;" onclick="showFullscreenImage('${booking.paymentSlip}')">
-                        </div>
-                    ` : ''}
-                    
-                    <div class="modal-footer">
-                        <button class="modal-btn cancel" onclick="this.closest('.modal-overlay').remove()">Close</button>
-                    </div>
+                    ${booking.paymentSlip ? `<button class="action-btn view-btn" onclick="showPaymentSlip('${booking.paymentSlip}')">View Slip</button>` : ''}
+                    <div class="modal-footer"><button class="modal-btn cancel" onclick="this.closest('.modal-overlay').remove()">Close</button></div>
                 </div>
             `;
-            
             document.body.appendChild(modal);
-        }
-        
-        // Cancel Booking
-        async function cancelBooking(bookingId) {
-            if (!confirm('Are you sure you want to cancel this booking?')) return;
-            
-            const booking = bookings.find(b => b.id == bookingId);
-            if (booking) {
-                booking.status = 'cancelled';
-                await database.ref('bookings/' + booking.id).set(booking);
-                
-                await createNotification(
-                    currentUser.id,
-                    'Booking Cancelled',
-                    `Your booking at ${booking.guestHouseName} (${booking.bookingId}) has been cancelled.`
-                );
-                
-                showNotification('Booking cancelled');
-                displayGuestBookings();
-            }
-        }
-        
-        // Load Guest Profile
-        function loadGuestProfile() {
-            document.getElementById('profileName').value = currentUser.name || '';
-            document.getElementById('profileEmail').value = currentUser.email || '';
-            document.getElementById('profilePhone').value = currentUser.phone || '';
-        }
-        
-        // Display Owner Rooms
+        };
+
+        window.showPaymentSlip = function(url) { document.getElementById('slipImage').src = url; document.getElementById('slipModal').classList.add('active'); };
+        window.closeSlipModal = function() { document.getElementById('slipModal').classList.remove('active'); };
+
+        window.cancelBooking = async function(bookingId) {
+            if (!confirm('Cancel this booking?')) return;
+            const booking = bookings.find(b => b.id === bookingId);
+            if (booking) { booking.status = 'cancelled'; await database.ref('bookings/'+booking.id).set(booking); showNotification('Booking cancelled'); displayGuestBookings(); }
+        };
+
+        // ========================== OWNER FUNCTIONS ==========================
         function displayOwnerRooms() {
             const container = document.getElementById('ownerRoomsList');
             container.innerHTML = '';
-            
-            const ownerGH = guestHouses.find(g => g.ownerId == currentUser.id);
-            if (!ownerGH) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-hotel"></i><p>No guest house found. Please contact support.</p></div>';
-                return;
-            }
-            
-            const ownerRooms = rooms.filter(r => r.guestHouseId == ownerGH.id);
-            
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!ownerGH) return;
+            const ownerRooms = rooms.filter(r => r.guestHouseId === ownerGH.id);
             if (ownerRooms.length === 0) {
                 container.innerHTML = '<div class="empty-state"><i class="fas fa-bed"></i><p>No rooms added yet</p></div>';
                 return;
             }
-            
             ownerRooms.forEach(room => {
                 const isAvailable = checkRoomAvailability(room);
-                const roomImage = room.images && room.images.length > 0 ? room.images[0] : 'https://via.placeholder.com/300x200?text=Room';
-                
-                const card = document.createElement('div');
-                card.className = 'room-card';
-                
+                const roomImage = room.images && room.images.length ? room.images[0] : 'https://via.placeholder.com/300x200?text=Room';
+                const card = document.createElement('div'); card.className = 'room-card';
                 card.innerHTML = `
                     <div class="room-image" style="background-image: url('${roomImage}')">
-                        <div class="room-status ${isAvailable ? 'available' : 'unavailable'}">
-                            ${isAvailable ? 'Available' : 'Unavailable'}
-                        </div>
-                        ${room.images && room.images.length > 1 ? `
-                            <div class="room-image-gallery">
-                                <i class="fas fa-images"></i> ${room.images.length}
-                            </div>
-                        ` : ''}
+                        <div class="room-status ${isAvailable ? 'available' : 'unavailable'}">${isAvailable ? 'Available' : 'Unavailable'}</div>
+                        ${room.images && room.images.length>1 ? `<div class="room-image-gallery"><i class="fas fa-images"></i> ${room.images.length}</div>`:''}
                     </div>
                     <div class="room-info">
-                        <div class="room-type">
-                            ${room.type} ${room.number ? `- ${room.number}` : ''}
-                        </div>
-                        <div class="room-capacity">
-                            <i class="fas fa-users"></i> ${room.capacity} persons
-                        </div>
+                        <div class="room-type">${room.type} ${room.number ? `- ${room.number}`:''}</div>
+                        <div class="room-capacity"><i class="fas fa-users"></i> ${room.capacity} persons</div>
                         <div class="room-price">${room.price} MVR / night</div>
-                        ${room.unavailableDates && room.unavailableDates.length > 0 ? `
-                            <div class="room-dates">
-                                <i class="fas fa-calendar-times"></i> ${room.unavailableDates.length} unavailable periods
-                            </div>
-                        ` : ''}
-                        <div style="display: flex; gap: 5px; margin-top: 10px;">
-                            <button class="action-btn edit-btn" onclick="editRoom(${room.id})">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="action-btn delete-btn" onclick="deleteRoom(${room.id})">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
+                        ${room.unavailableDates?.length ? `<div class="room-dates"><i class="fas fa-calendar-times"></i> ${room.unavailableDates.length} unavailable periods</div>`:''}
+                        <div style="display:flex; gap:5px; margin-top:10px;">
+                            <button class="action-btn edit-btn" onclick="editRoom(${room.id})"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="action-btn delete-btn" onclick="deleteRoom(${room.id})"><i class="fas fa-trash"></i> Delete</button>
                         </div>
                     </div>
                 `;
-                
                 container.appendChild(card);
             });
         }
-        
-        // Open Room Modal
-        function openRoomModal(roomId = null) {
+
+        window.openRoomModal = function(roomId=null) {
             currentRoomId = roomId;
-            
-            // Set min date for unavailable dates
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('unavailableFrom').min = today;
             document.getElementById('unavailableTo').min = today;
-            
             if (roomId) {
-                const room = rooms.find(r => r.id == roomId);
+                const room = rooms.find(r => r.id === roomId);
                 if (room) {
                     document.getElementById('roomModalTitle').textContent = 'Edit Room';
                     document.getElementById('roomType').value = room.type;
@@ -3816,17 +2731,9 @@
                     document.getElementById('roomCapacity').value = room.capacity;
                     document.getElementById('roomPrice').value = room.price;
                     document.getElementById('roomDescription').value = room.description || '';
-                    
-                    // Set checkboxes
-                    document.querySelectorAll('#roomModal input[type="checkbox"]').forEach(cb => {
-                        cb.checked = room.amenities?.includes(cb.value) || false;
-                    });
-                    
-                    // Set images
+                    document.querySelectorAll('#roomModal input[type="checkbox"]').forEach(cb => cb.checked = room.amenities?.includes(cb.value) || false);
                     currentRoomImages = room.images || [];
                     displayRoomImagePreviews();
-                    
-                    // Set unavailable dates
                     unavailableRanges = room.unavailableDates || [];
                     displayUnavailableRanges();
                 }
@@ -3837,476 +2744,214 @@
                 document.getElementById('roomCapacity').value = '2';
                 document.getElementById('roomPrice').value = '';
                 document.getElementById('roomDescription').value = '';
-                
                 document.querySelectorAll('#roomModal input[type="checkbox"]').forEach(cb => cb.checked = false);
-                
-                currentRoomImages = [];
-                document.getElementById('roomImagePreview').innerHTML = '';
-                
-                unavailableRanges = [];
-                document.getElementById('unavailableDatesList').innerHTML = '';
+                currentRoomImages = []; document.getElementById('roomImagePreview').innerHTML = '';
+                unavailableRanges = []; document.getElementById('unavailableDatesList').innerHTML = '';
             }
-            
             document.getElementById('roomModal').classList.add('active');
-        }
-        
-        // Room Image Upload
+        };
+
         const roomImageUpload = document.getElementById('roomImageUpload');
         const roomImagesInput = document.getElementById('roomImages');
-        
-        roomImageUpload?.addEventListener('click', () => roomImagesInput.click());
-        
-        roomImageUpload?.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            roomImageUpload.style.borderColor = '#00a8cc';
-        });
-        
-        roomImageUpload?.addEventListener('dragleave', () => {
-            roomImageUpload.style.borderColor = '#ddd';
-        });
-        
-        roomImageUpload?.addEventListener('drop', (e) => {
-            e.preventDefault();
-            roomImageUpload.style.borderColor = '#ddd';
-            handleRoomImages(e.dataTransfer.files);
-        });
-        
-        roomImagesInput?.addEventListener('change', () => {
-            handleRoomImages(roomImagesInput.files);
-        });
-        
+        roomImageUpload.addEventListener('click', () => roomImagesInput.click());
+        roomImageUpload.addEventListener('dragover', e => { e.preventDefault(); roomImageUpload.style.borderColor = '#00a8cc'; });
+        roomImageUpload.addEventListener('dragleave', () => roomImageUpload.style.borderColor = '#ddd');
+        roomImageUpload.addEventListener('drop', e => { e.preventDefault(); roomImageUpload.style.borderColor = '#ddd'; handleRoomImages(e.dataTransfer.files); });
+        roomImagesInput.addEventListener('change', () => handleRoomImages(roomImagesInput.files));
+
         function handleRoomImages(files) {
             Array.from(files).forEach(file => {
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
-                        currentRoomImages.push(e.target.result);
-                        displayRoomImagePreviews();
-                    };
+                    reader.onload = e => { currentRoomImages.push(e.target.result); displayRoomImagePreviews(); };
                     reader.readAsDataURL(file);
                 }
             });
         }
-        
         function displayRoomImagePreviews() {
             const preview = document.getElementById('roomImagePreview');
             preview.innerHTML = '';
-            
-            currentRoomImages.forEach((img, index) => {
-                const div = document.createElement('div');
-                div.className = 'preview-item';
-                div.innerHTML = `
-                    <img src="${img}">
-                    <div class="remove-image" onclick="removeRoomImage(${index})">×</div>
-                `;
+            currentRoomImages.forEach((img, idx) => {
+                const div = document.createElement('div'); div.className = 'preview-item';
+                div.innerHTML = `<img src="${img}"><div class="remove-image" onclick="removeRoomImage(${idx})">×</div>`;
                 preview.appendChild(div);
             });
         }
-        
-        function removeRoomImage(index) {
-            currentRoomImages.splice(index, 1);
-            displayRoomImagePreviews();
-        }
-        
-        // Add Unavailable Range
-        function addUnavailableRange() {
-            const fromDate = document.getElementById('unavailableFrom').value;
-            const toDate = document.getElementById('unavailableTo').value;
-            
-            if (!fromDate || !toDate) {
-                showNotification('Please select both dates');
-                return;
-            }
-            
-            if (new Date(fromDate) > new Date(toDate)) {
-                showNotification('From date must be before to date');
-                return;
-            }
-            
-            unavailableRanges.push({ from: fromDate, to: toDate });
+        window.removeRoomImage = function(idx) { currentRoomImages.splice(idx,1); displayRoomImagePreviews(); };
+
+        window.addUnavailableRange = function() {
+            const from = document.getElementById('unavailableFrom').value, to = document.getElementById('unavailableTo').value;
+            if (!from || !to) { showNotification('Please select both dates'); return; }
+            if (new Date(from) > new Date(to)) { showNotification('From date must be before to date'); return; }
+            unavailableRanges.push({ from, to });
             displayUnavailableRanges();
-            
-            document.getElementById('unavailableFrom').value = '';
-            document.getElementById('unavailableTo').value = '';
-        }
-        
+            document.getElementById('unavailableFrom').value = ''; document.getElementById('unavailableTo').value = '';
+        };
         function displayUnavailableRanges() {
             const list = document.getElementById('unavailableDatesList');
             list.innerHTML = '';
-            
-            unavailableRanges.forEach((range, index) => {
-                const div = document.createElement('div');
-                div.className = 'date-range-item';
-                div.innerHTML = `
-                    <span>${range.from} to ${range.to}</span>
-                    <span class="remove" onclick="removeUnavailableRange(${index})">×</span>
-                `;
+            unavailableRanges.forEach((range, idx) => {
+                const div = document.createElement('div'); div.className = 'date-range-item';
+                div.innerHTML = `<span>${range.from} to ${range.to}</span><span class="remove" onclick="removeUnavailableRange(${idx})">×</span>`;
                 list.appendChild(div);
             });
         }
-        
-        function removeUnavailableRange(index) {
-            unavailableRanges.splice(index, 1);
-            displayUnavailableRanges();
-        }
-        
-        // Save Room
-        document.getElementById('saveRoomBtn')?.addEventListener('click', async () => {
+        window.removeUnavailableRange = function(idx) { unavailableRanges.splice(idx,1); displayUnavailableRanges(); };
+
+        document.getElementById('saveRoomBtn').addEventListener('click', async () => {
             const type = document.getElementById('roomType').value;
             const number = document.getElementById('roomNumber').value;
             const capacity = document.getElementById('roomCapacity').value;
             const price = document.getElementById('roomPrice').value;
             const description = document.getElementById('roomDescription').value;
-            
-            if (!type || !capacity || !price) {
-                showNotification('Please fill required fields');
-                return;
-            }
-            
-            if (parseFloat(price) <= 0) {
-                showNotification('Price must be greater than 0');
-                return;
-            }
-            
+            if (!type || !capacity || !price) { showNotification('Please fill required fields'); return; }
             const amenities = [];
-            document.querySelectorAll('#roomModal input[type="checkbox"]:checked').forEach(cb => {
-                amenities.push(cb.value);
-            });
-            
-            const ownerGH = guestHouses.find(g => g.ownerId == currentUser.id);
-            if (!ownerGH) {
-                showNotification('Guest house not found');
-                return;
-            }
-            
+            document.querySelectorAll('#roomModal input[type="checkbox"]:checked').forEach(cb => amenities.push(cb.value));
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!ownerGH) return;
             const roomData = {
                 id: currentRoomId || Date.now(),
                 guestHouseId: ownerGH.id,
-                type: type,
-                number: number,
-                capacity: parseInt(capacity),
-                price: parseFloat(price),
-                description: description,
-                amenities: amenities,
-                images: currentRoomImages,
+                type, number, capacity: parseInt(capacity), price: parseFloat(price),
+                description, amenities, images: currentRoomImages,
                 unavailableDates: unavailableRanges,
                 createdAt: new Date().toISOString()
             };
-            
             await database.ref('rooms/' + roomData.id).set(roomData);
-            
             closeRoomModal();
             showNotification(currentRoomId ? 'Room updated' : 'Room added');
             displayOwnerRooms();
         });
-        
-        // Edit Room
-        function editRoom(roomId) {
-            openRoomModal(roomId);
-        }
-        
-        // Delete Room
-        async function deleteRoom(roomId) {
-            if (!confirm('Are you sure you want to delete this room?')) return;
-            
-            const hasBookings = bookings.some(b => 
-                b.bookedRooms && b.bookedRooms.some(r => r.roomId == roomId) && 
-                (b.status === 'pending' || b.status === 'approved' || b.status === 'checked-in')
-            );
-            
-            if (hasBookings) {
-                showNotification('Cannot delete room with active bookings');
-                return;
+
+        window.editRoom = function(roomId) { openRoomModal(roomId); };
+        window.deleteRoom = async function(roomId) {
+            if (!confirm('Delete room?')) return;
+            if (bookings.some(b => b.roomId === roomId && (b.status==='pending'||b.status==='approved'))) {
+                showNotification('Cannot delete room with active bookings'); return;
             }
-            
             await database.ref('rooms/' + roomId).remove();
             showNotification('Room deleted');
             displayOwnerRooms();
-        }
-        
-        // Close Room Modal
-        function closeRoomModal() {
-            document.getElementById('roomModal').classList.remove('active');
-            currentRoomId = null;
-            currentRoomImages = [];
-            unavailableRanges = [];
-        }
-        
-        // Display Owner Bookings
+        };
+
+        function closeRoomModal() { document.getElementById('roomModal').classList.remove('active'); currentRoomId = null; currentRoomImages = []; unavailableRanges = []; }
+
         function displayOwnerBookings() {
             const tbody = document.getElementById('ownerBookingsTable');
             tbody.innerHTML = '';
-            
-            const ownerGH = guestHouses.find(g => g.ownerId == currentUser.id);
-            if (!ownerGH) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No guest house found</td></tr>';
-                return;
-            }
-            
-            const ownerBookings = bookings.filter(b => b.guestHouseId == ownerGH.id);
-            
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!ownerGH) return;
+            const ownerBookings = bookings.filter(b => b.guestHouseId === ownerGH.id);
             if (ownerBookings.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No bookings found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px;">No bookings</td></tr>';
                 return;
             }
-            
-            ownerBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            
-            ownerBookings.forEach(booking => {
+            ownerBookings.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+            ownerBookings.forEach(b => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${booking.bookingId}</td>
-                    <td>
-                        ${booking.guestName}<br>
-                        <small>${booking.guestPhone}</small>
-                    </td>
-                    <td>${booking.bookedRooms.length} rooms</td>
-                    <td>
-                        ${booking.checkIn} to ${booking.checkOut}<br>
-                        <small>${booking.nights} nights</small>
-                    </td>
-                    <td>${booking.total} MVR</td>
-                    <td>
-                        ${booking.paymentSlip ? 
-                            `<button class="action-btn view-btn" onclick="showFullscreenImage('${booking.paymentSlip}')">View Slip</button>` : 
-                            'No slip'}
-                    </td>
-                    <td>
-                        <span class="status-badge status-${booking.status}">${booking.status}</span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn view-btn" onclick="viewBookingDetails(${booking.id})">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            ${booking.status === 'pending' ? `
-                                <button class="action-btn approve-btn" onclick="updateBookingStatus(${booking.id}, 'approved')">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                                <button class="action-btn reject-btn" onclick="updateBookingStatus(${booking.id}, 'rejected')">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            ` : ''}
-                            ${booking.status === 'approved' ? `
-                                <button class="action-btn edit-btn" onclick="updateBookingStatus(${booking.id}, 'checked-in')">
-                                    Check In
-                                </button>
-                            ` : ''}
-                            ${booking.status === 'checked-in' ? `
-                                <button class="action-btn view-btn" onclick="updateBookingStatus(${booking.id}, 'checked-out')">
-                                    Check Out
-                                </button>
-                            ` : ''}
-                        </div>
-                    </td>
+                    <td>${b.bookingId}</td>
+                    <td>${b.guestName}<br><small>${b.guestPhone}</small></td>
+                    <td>${b.bookedRooms.length} rooms</td>
+                    <td>${b.checkIn} to ${b.checkOut}<br><small>${b.nights} nights</small></td>
+                    <td>${b.total} MVR</td>
+                    <td>${b.paymentSlip ? `<button class="action-btn view-btn" onclick="showPaymentSlip('${b.paymentSlip}')">View Slip</button>` : 'No slip'}</td>
+                    <td><span class="status-badge status-${b.status}">${b.status}</span></td>
+                    <td><div class="action-buttons">
+                        <button class="action-btn view-btn" onclick="viewBookingDetails(${b.id})"><i class="fas fa-eye"></i></button>
+                        ${b.status === 'pending' ? `
+                            <button class="action-btn approve-btn" onclick="updateBookingStatus(${b.id}, 'approved')"><i class="fas fa-check"></i></button>
+                            <button class="action-btn reject-btn" onclick="updateBookingStatus(${b.id}, 'rejected')"><i class="fas fa-times"></i></button>
+                        ` : ''}
+                        ${b.status === 'approved' ? `<button class="action-btn edit-btn" onclick="updateBookingStatus(${b.id}, 'checked-in')">Check In</button>` : ''}
+                        ${b.status === 'checked-in' ? `<button class="action-btn view-btn" onclick="updateBookingStatus(${b.id}, 'checked-out')">Check Out</button>` : ''}
+                    </div></td>
                 `;
                 tbody.appendChild(row);
             });
         }
-        
-        // Update Booking Status
-        async function updateBookingStatus(bookingId, status) {
-            const booking = bookings.find(b => b.id == bookingId);
-            if (booking) {
-                const oldStatus = booking.status;
-                booking.status = status;
-                await database.ref('bookings/' + booking.id).set(booking);
-                
-                // Create notification for guest
-                let notificationTitle, notificationMessage;
-                
-                switch(status) {
-                    case 'approved':
-                        notificationTitle = 'Booking Approved';
-                        notificationMessage = `Your booking at ${booking.guestHouseName} (${booking.bookingId}) has been approved!`;
-                        break;
-                    case 'rejected':
-                        notificationTitle = 'Booking Rejected';
-                        notificationMessage = `Your booking at ${booking.guestHouseName} (${booking.bookingId}) has been rejected.`;
-                        break;
-                    case 'checked-in':
-                        notificationTitle = 'Checked In';
-                        notificationMessage = `You have checked in at ${booking.guestHouseName}. Enjoy your stay!`;
-                        break;
-                    case 'checked-out':
-                        notificationTitle = 'Checked Out';
-                        notificationMessage = `Thank you for staying at ${booking.guestHouseName}. We hope to see you again!`;
-                        break;
-                    default:
-                        return;
-                }
-                
-                const guestUser = users.find(u => u.email === booking.guestEmail);
-                if (guestUser) {
-                    await createNotification(guestUser.id, notificationTitle, notificationMessage);
-                }
-                
-                if (status === 'approved') {
-                    showSuccess('Booking Approved!', `Booking ${booking.bookingId} has been approved. Guest will be notified.`);
-                    setTimeout(hideSuccess, 3000);
-                }
-                
-                displayOwnerBookings();
-                updateOwnerStats();
-            }
-        }
-        
-        // Update Owner Stats
+
+        window.updateBookingStatus = async function(bookingId, status) {
+            const booking = bookings.find(b => b.id === bookingId);
+            if (booking) { booking.status = status; await database.ref('bookings/'+booking.id).set(booking); displayOwnerBookings(); updateOwnerStats(); }
+        };
+
         function updateOwnerStats() {
-            const ownerGH = guestHouses.find(g => g.ownerId == currentUser.id);
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
             if (!ownerGH) return;
-            
-            const ownerBookings = bookings.filter(b => b.guestHouseId == ownerGH.id);
-            const ownerRooms = rooms.filter(r => r.guestHouseId == ownerGH.id);
-            
+            const ownerBookings = bookings.filter(b => b.guestHouseId === ownerGH.id);
+            const ownerRooms = rooms.filter(r => r.guestHouseId === ownerGH.id);
             document.getElementById('totalBookings').textContent = ownerBookings.length;
-            document.getElementById('pendingBookings').textContent = ownerBookings.filter(b => b.status === 'pending').length;
+            document.getElementById('pendingBookings').textContent = ownerBookings.filter(b => b.status==='pending').length;
             document.getElementById('totalRooms').textContent = ownerRooms.length;
-            
-            const currentMonth = new Date().getMonth();
-            const monthlyRevenue = ownerBookings
-                .filter(b => new Date(b.createdAt).getMonth() === currentMonth && 
-                       (b.status === 'approved' || b.status === 'checked-in' || b.status === 'checked-out'))
-                .reduce((sum, b) => sum + b.total, 0);
-            document.getElementById('monthlyRevenue').textContent = monthlyRevenue + ' MVR';
+            const monthly = ownerBookings.filter(b => new Date(b.createdAt).getMonth()===new Date().getMonth() && (b.status==='approved'||b.status==='checked-in'||b.status==='checked-out')).reduce((s,b)=>s+b.total,0);
+            document.getElementById('monthlyRevenue').textContent = monthly + ' MVR';
         }
-        
-        // Display Guests
+
         function displayGuests() {
             const tbody = document.getElementById('guestsTable');
             tbody.innerHTML = '';
-            
-            const ownerGH = guestHouses.find(g => g.ownerId == currentUser.id);
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
             if (!ownerGH) return;
-            
-            const ownerBookings = bookings.filter(b => b.guestHouseId == ownerGH.id);
+            const ownerBookings = bookings.filter(b => b.guestHouseId === ownerGH.id);
             const guestEmails = [...new Set(ownerBookings.map(b => b.guestEmail))];
-            
             const guests = guestEmails.map(email => {
-                const guestBookings = ownerBookings.filter(b => b.guestEmail === email);
-                const lastBooking = guestBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-                
-                return {
-                    email: email,
-                    name: lastBooking.guestName,
-                    phone: lastBooking.guestPhone,
-                    bookings: guestBookings.length,
-                    lastBooking: lastBooking.createdAt
-                };
+                const gb = ownerBookings.filter(b => b.guestEmail === email);
+                const last = gb.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt))[0];
+                return { email, name: last.guestName, phone: last.guestPhone, bookings: gb.length, lastBooking: last.createdAt };
             });
-            
-            if (guests.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No guests yet</td></tr>';
-                return;
-            }
-            
-            guests.forEach(guest => {
+            if (guests.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No guests</td></tr>'; return; }
+            guests.forEach(g => {
                 const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${guest.name}</td>
-                    <td>${guest.phone}<br><small>${guest.email}</small></td>
-                    <td>${guest.bookings}</td>
-                    <td>${new Date(guest.lastBooking).toLocaleDateString()}</td>
-                    <td>
-                        <button class="action-btn view-btn" onclick="viewGuestBookings('${guest.email}')">
-                            View Bookings
-                        </button>
-                    </td>
-                `;
+                row.innerHTML = `<td>${g.name}</td><td>${g.phone}<br><small>${g.email}</small></td><td>${g.bookings}</td><td>${new Date(g.lastBooking).toLocaleDateString()}</td>
+                <td><button class="action-btn view-btn" onclick="viewGuestBookings('${g.email}')">View Bookings</button></td>`;
                 tbody.appendChild(row);
             });
         }
-        
-        // View Guest Bookings
-        function viewGuestBookings(email) {
-            const ownerGH = guestHouses.find(g => g.ownerId == currentUser.id);
+
+        window.viewGuestBookings = function(email) {
+            const ownerGH = guestHouses.find(g => g.ownerId === currentUser.id);
             if (!ownerGH) return;
-            
-            const guestBookings = bookings.filter(b => b.guestHouseId == ownerGH.id && b.guestEmail === email);
-            
-            let html = '<h4 style="margin-bottom: 15px;">Guest Bookings</h4>';
-            guestBookings.forEach(booking => {
-                html += `
-                    <div style="background: #f5f5f5; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-                        <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
-                        <p><strong>Rooms:</strong> ${booking.bookedRooms.length}</p>
-                        <p><strong>Dates:</strong> ${booking.checkIn} to ${booking.checkOut}</p>
-                        <p><strong>Total:</strong> ${booking.total} MVR</p>
-                        <p><strong>Status:</strong> <span class="status-badge status-${booking.status}">${booking.status}</span></p>
-                    </div>
-                `;
+            const guestBookings = bookings.filter(b => b.guestHouseId === ownerGH.id && b.guestEmail === email);
+            let html = '<h4>Guest Bookings</h4>';
+            guestBookings.forEach(b => {
+                html += `<div style="background:#f5f5f5; padding:10px; border-radius:8px; margin:10px 0;">
+                    <p><strong>Booking ID:</strong> ${b.bookingId}</p>
+                    <p><strong>Rooms:</strong> ${b.bookedRooms.length}</p>
+                    <p><strong>Dates:</strong> ${b.checkIn} to ${b.checkOut}</p>
+                    <p><strong>Total:</strong> ${b.total} MVR</p>
+                    <p><strong>Status:</strong> <span class="status-badge status-${b.status}">${b.status}</span></p>
+                </div>`;
             });
-            
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3>Guest: ${guestBookings[0].guestName}</h3>
-                    </div>
-                    ${html}
-                    <div class="modal-footer">
-                        <button class="modal-btn cancel" onclick="this.closest('.modal-overlay').remove()">Close</button>
-                    </div>
-                </div>
-            `;
-            
+            const modal = document.createElement('div'); modal.className = 'modal-overlay active';
+            modal.innerHTML = `<div class="modal"><div class="modal-header"><h3>Guest: ${guestBookings[0]?.guestName}</h3></div>${html}<div class="modal-footer"><button class="modal-btn cancel" onclick="this.closest('.modal-overlay').remove()">Close</button></div></div>`;
             document.body.appendChild(modal);
-        }
-        
-        // Load Guest House Info
+        };
+
         function loadGuestHouseInfo() {
-            const gh = guestHouses.find(g => g.ownerId == currentUser.id);
-            if (!gh) {
-                document.getElementById('guestHouseInfo').innerHTML = '<p>No guest house found. Please contact support.</p>';
-                return;
-            }
-            
+            const gh = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!gh) return;
             const info = document.getElementById('guestHouseInfo');
-            
-            let imageHtml = '';
-            if (gh.images && gh.images.length > 0) {
-                imageHtml = `
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
-                        ${gh.images.map(img => `
-                            <img src="${img}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer;" onclick="showFullscreenImage('${img}')">
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
+            let imageHtml = gh.images && gh.images.length ? `<div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">${gh.images.map(img => `<img src="${img}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;cursor:pointer;" onclick="showPaymentSlip('${img}')">`).join('')}</div>` : '';
             info.innerHTML = `
-                <h4 style="color: #0066cc; margin-bottom: 10px;">${gh.name}</h4>
+                <h4 style="color:#0066cc;">${gh.name}</h4>
                 <p><i class="fas fa-map-marker-alt"></i> ${gh.island}, Maldives</p>
                 <p><i class="fas fa-phone"></i> ${gh.contact || 'Not set'}</p>
                 <p><i class="fas fa-envelope"></i> ${gh.email || 'Not set'}</p>
-                
-                <h4 style="margin: 15px 0 10px;">Bank Details</h4>
+                <h4 style="margin:15px 0 10px;">Bank Details</h4>
                 <p><strong>Bank:</strong> ${gh.bankName || 'Not set'}</p>
                 <p><strong>Account:</strong> ${gh.accountNumber || 'Not set'}</p>
                 <p><strong>Holder:</strong> ${gh.accountHolder || 'Not set'}</p>
                 <p><strong>Branch:</strong> ${gh.bankBranch || 'Not set'}</p>
-                
-                <h4 style="margin: 15px 0 10px;">Facilities</h4>
-                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                    ${(gh.facilities || []).map(f => `
-                        <span class="facility-tag"><i class="fas fa-check"></i> ${f}</span>
-                    `).join('')}
-                </div>
-                
-                <h4 style="margin: 15px 0 10px;">Images</h4>
-                ${imageHtml || '<p>No images uploaded</p>'}
+                <h4 style="margin:15px 0 10px;">Facilities</h4>
+                <div style="display:flex; flex-wrap:wrap; gap:8px;">${(gh.facilities || []).map(f => `<span class="facility-tag"><i class="fas fa-check"></i> ${f}</span>`).join('')}</div>
+                <h4 style="margin:15px 0 10px;">Images</h4>${imageHtml || '<p>No images uploaded</p>'}
             `;
         }
-        
-        // Open GH Settings
-        function openGHSettings() {
-            const gh = guestHouses.find(g => g.ownerId == currentUser.id);
-            if (!gh) {
-                showNotification('Guest house not found');
-                return;
-            }
-            
+
+        window.openGHSettings = function() {
+            const gh = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!gh) return;
             document.getElementById('editGHName').value = gh.name || '';
             document.getElementById('editGHDescription').value = gh.description || '';
             document.getElementById('editGHIsland').value = gh.island || '';
@@ -4317,53 +2962,20 @@
             document.getElementById('editGHAccountHolder').value = gh.accountHolder || '';
             document.getElementById('editGHAccountNumber').value = gh.accountNumber || '';
             document.getElementById('editGHBranch').value = gh.bankBranch || '';
-            
-            document.querySelectorAll('#ghSettingsModal input[type="checkbox"]').forEach(cb => {
-                cb.checked = gh.facilities?.includes(cb.value) || false;
-            });
-            
-            // Show existing images
+            document.querySelectorAll('#ghSettingsModal input[type="checkbox"]').forEach(cb => cb.checked = gh.facilities?.includes(cb.value) || false);
             const preview = document.getElementById('ghImagePreview');
             preview.innerHTML = '';
-            if (gh.images) {
-                gh.images.forEach(img => {
-                    const div = document.createElement('div');
-                    div.className = 'preview-item';
-                    div.innerHTML = `<img src="${img}">`;
-                    preview.appendChild(div);
-                });
-            }
-            
-            // Initialize map
-            setTimeout(() => {
-                initEditMap(gh.lat, gh.lng);
-            }, 100);
-            
+            if (gh.images) gh.images.forEach(img => { const d = document.createElement('div'); d.className='preview-item'; d.innerHTML=`<img src="${img}">`; preview.appendChild(d); });
             document.getElementById('ghSettingsModal').classList.add('active');
-        }
-        
-        // Save GH Settings
-        document.getElementById('saveGHSettings')?.addEventListener('click', async () => {
-            const gh = guestHouses.find(g => g.ownerId == currentUser.id);
-            if (!gh) {
-                showNotification('Guest house not found');
-                return;
-            }
-            
+        };
+
+        document.getElementById('saveGHSettings').addEventListener('click', async () => {
+            const gh = guestHouses.find(g => g.ownerId === currentUser.id);
+            if (!gh) return;
             const facilities = [];
-            document.querySelectorAll('#ghSettingsModal input[type="checkbox"]:checked').forEach(cb => {
-                facilities.push(cb.value);
-            });
-            
-            // Get new images from preview
+            document.querySelectorAll('#ghSettingsModal input[type="checkbox"]:checked').forEach(cb => facilities.push(cb.value));
             const newImages = [];
-            document.querySelectorAll('#ghImagePreview .preview-item img').forEach(img => {
-                newImages.push(img.src);
-            });
-            
-            const lat = parseFloat(document.getElementById('editLat').value) || gh.lat;
-            const lng = parseFloat(document.getElementById('editLng').value) || gh.lng;
-            
+            document.querySelectorAll('#ghImagePreview .preview-item img').forEach(img => newImages.push(img.src));
             gh.name = document.getElementById('editGHName').value;
             gh.description = document.getElementById('editGHDescription').value;
             gh.island = document.getElementById('editGHIsland').value;
@@ -4376,145 +2988,60 @@
             gh.bankBranch = document.getElementById('editGHBranch').value;
             gh.facilities = facilities;
             gh.images = newImages;
-            gh.lat = lat;
-            gh.lng = lng;
-            
             await database.ref('guestHouses/' + gh.id).set(gh);
-            
             closeGHSettings();
             loadGuestHouseInfo();
             showNotification('Guest house updated');
         });
-        
-        // Close GH Settings
-        function closeGHSettings() {
-            document.getElementById('ghSettingsModal').classList.remove('active');
-        }
-        
-        // GH Image Upload
+
+        function closeGHSettings() { document.getElementById('ghSettingsModal').classList.remove('active'); }
+
         const ghImageUpload = document.getElementById('ghImageUpload');
         const ghImagesInput = document.getElementById('ghImages');
-        
-        ghImageUpload?.addEventListener('click', () => ghImagesInput.click());
-        
-        ghImageUpload?.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            ghImageUpload.style.borderColor = '#00a8cc';
-        });
-        
-        ghImageUpload?.addEventListener('dragleave', () => {
-            ghImageUpload.style.borderColor = '#ddd';
-        });
-        
-        ghImageUpload?.addEventListener('drop', (e) => {
-            e.preventDefault();
-            ghImageUpload.style.borderColor = '#ddd';
-            handleGHImages(e.dataTransfer.files);
-        });
-        
-        ghImagesInput?.addEventListener('change', () => {
-            handleGHImages(ghImagesInput.files);
-        });
-        
+        ghImageUpload.addEventListener('click', () => ghImagesInput.click());
+        ghImageUpload.addEventListener('dragover', e => { e.preventDefault(); ghImageUpload.style.borderColor = '#00a8cc'; });
+        ghImageUpload.addEventListener('dragleave', () => ghImageUpload.style.borderColor = '#ddd');
+        ghImageUpload.addEventListener('drop', e => { e.preventDefault(); ghImageUpload.style.borderColor = '#ddd'; handleGHImages(e.dataTransfer.files); });
+        ghImagesInput.addEventListener('change', () => handleGHImages(ghImagesInput.files));
         function handleGHImages(files) {
             const preview = document.getElementById('ghImagePreview');
-            
             Array.from(files).forEach(file => {
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const div = document.createElement('div');
-                        div.className = 'preview-item';
-                        div.innerHTML = `<img src="${e.target.result}">`;
-                        preview.appendChild(div);
-                    };
+                    reader.onload = e => { const d = document.createElement('div'); d.className='preview-item'; d.innerHTML=`<img src="${e.target.result}">`; preview.appendChild(d); };
                     reader.readAsDataURL(file);
                 }
             });
         }
-        
-        // Notifications Toggle
-        document.getElementById('userAvatar').addEventListener('click', () => {
-            const panel = document.getElementById('notificationsPanel');
-            panel.classList.toggle('active');
-            loadNotifications();
-        });
-        
-        // Mark All Read
-        document.getElementById('markAllRead').addEventListener('click', async () => {
-            const userNotifications = notifications.filter(n => n.userId == currentUser.id && !n.read);
-            
-            for (const notification of userNotifications) {
-                notification.read = true;
-                await database.ref('notifications/' + notification.id).set(notification);
-            }
-            
-            loadNotifications();
-            updateNotificationBadge();
-        });
-        
-        // Sidebar Toggle
+
+        // ========================== SIDEBAR / NOTIFICATION ==========================
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
-        
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-        });
-        
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-        
-        // Logout
+        menuToggle.addEventListener('click', () => { sidebar.classList.add('active'); overlay.classList.add('active'); });
+        overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('currentUser');
             currentUser = null;
             dashboardPage.style.display = 'none';
             loginPage.style.display = 'block';
-            loginForm.style.display = 'block';
-            registerForm.style.display = 'none';
+            loginFormDiv.style.display = 'block';
+            registerFormDiv.style.display = 'none';
         });
-        
-        // Close modal when clicking outside
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
-        });
-        
-        // Success Message Functions
-        function showSuccess(title, message) {
+
+        function showNotification(message) {
+            const n = document.createElement('div'); n.className = 'notification'; n.innerHTML = `<i class="fas fa-info-circle"></i><span>${message}</span>`;
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 3000);
+        }
+        function showSuccess(title, text) {
             document.getElementById('successTitle').textContent = title;
-            document.getElementById('successText').textContent = message;
+            document.getElementById('successText').textContent = text;
             document.getElementById('successMessage').classList.add('show');
         }
-        
-        function hideSuccess() {
-            document.getElementById('successMessage').classList.remove('show');
-        }
-        
-        // Notification
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.className = 'notification-toast';
-            notification.innerHTML = `
-                <i class="fas fa-info-circle"></i>
-                <span>${message}</span>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-        
-        // Initialize
+        function hideSuccess() { document.getElementById('successMessage').classList.remove('show'); }
+
         initApp();
     </script>
 </body>
